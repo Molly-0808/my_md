@@ -871,11 +871,85 @@ a.forEach((i) => {
 });
 ```
 
-```js
-//
-結果
-————————————————————————————————————————————
+如果同個HTML需要匯入多個JS但順序很複雜怎麼辦?
+
+同時想匯入lib.js和app.js
+HTML只需要匯入app.js
+
+```html
+index.html裡：
+<script src="app.js" type="module"></script>
 ```
+
+```js
+lib.js裡：
+function hi() {
+  console.log(hi);
+}
+function hey() {
+  console.log(hey);
+}
+// named export 具名匯出
+export { hi, hey };
+----------------------------------
+// export default 預設匯出
+export default hey;
+————————————————————————————————————————————
+app.js裡：
+// import 匯入 lib.js
+import { hi, hey } from "./libs";
+
+如果老闆在這裡寫了
+function hi() {
+  console.log("here");
+}
+跟我在lib.js的hi重名了怎麼辦?
+{}裡面的東西可以用as取一個別名，避免和下面取一樣的名字的東西重複。
+匯入hi同時給它一個綽號hh。
+import { hi as hh, hey } from "./lib.js";
+
+console.log(hi);
+console.log(hh); 就不會重複兩個hi了
+----------------------------------
+// 下方這種沒有{}的會找default預設好的來匯入(也就是896行的hey)
+// cc可以改別的名字，不管寫cc還是什麼，都會匯入預設好的hey
+import cc from "./lib.js";
+```
+
+> npm
+
+建立package.json
+![建立package.json](./image/1.jpg)
+
+寫腳本測試
+![寫腳本測試](./image/2.jpg)
+
+安裝dayjs
+![安裝dayjs](./image/3.jpg)
+
+安裝後的變化
+![安裝後的變化](./image/4.jpg)
+
+安裝vue
+![安裝vue](./image/5.jpg)
+
+卸載的方式
+![卸載的方式](./image/6.jpg)
+
+加上"type"="module"
+![加上"type"="module"](./image/7.jpg)
+
+測試node跑成功了沒
+![測試node跑成功了沒](./image/8.jpg)
+
+承上頁
+![測試node跑成功了沒](./image/9.jpg)
+
+打包工具vite
+![打包工具vite](./image/10.jpg)
+
+npm run dev
+![npm run dev](./image/11.jpg)
 
 ```js
 //
