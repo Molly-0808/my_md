@@ -667,8 +667,8 @@ hi(...nums); // 等於執行：hi(1, 2, 3, 4, 5)
 const h = () => {
   console.log(e.target);
 };
-aa.addEventlistener("click", h);
-bb.addEventlistener("click", h);
+aa.addEventListener("click", h);
+bb.addEventListener("click", h);
 ```
 
 > 4/13 ES6筆記 結束
@@ -716,7 +716,7 @@ console.log(3);
 ```
 
 ```js
-// fetch 搭配then 非同步抓取資料
+// fetch 搭配 then 非同步抓取資料
 結果 會抓到一個 Response 物件
 
 fetch 抓回來的 x（回應值）就像是一個包裹：
@@ -951,11 +951,326 @@ import cc from "./lib.js";
 npm run dev
 ![npm run dev](./image/11.jpg)
 
+> 4/27 axios筆記 開始
+
+```html
+index.html裡：
+<script src="app.js" type="module"></script>
+```
+
 ```js
-//
-結果
+// npm install axios
+axios是用來幫助程式與伺服器交換資料（API 串接）的工具
+然後npm i -D vite //直接輸入npm i -D vite它會幫我生package.json
+並寫腳本"scripts": {"dev": "vite"}
+然後npm run dev
+打開5173連結
+
+題：youbike 復興南路上，可借車數 >= 5 的站名
+用axios就可以省略.json的步驟
+
+import axios from "axios";
+console.log(axios);
+
+const url =
+  "https://tcgbusfs.blob.core.windows.net/dotapp/youbike/v2/youbike_immediate.json";
+const result = fetch(url);
+
+GET/POST
+
+.then寫法
+
+axios.get(url).then((resp) => {
+  const stations = resp.data;
+
+  stations
+    .filter((st) =>
+      st.ar.includes("復興南路") && station.available_rent_bikes >= 5)
+    .forEach((st) =>
+      console.log(station.sna));
+    });
+
+await寫法
+
+try {
+    const response = await axios.get(url)
+    const stations = response.data
+    stations
+        .filter(st => st.ar.includes("復興南路"))
+        .filter(st => st.available_rent_bikes >= 5)
+        .forEach(st => {
+            console.log(st.sna)
+        });
+
+} catch (err) {
+    console.log(err)
+}
+```
+
+> 4/27 axios筆記 結束
+
+> 4/27 dayjs筆記 開始
+
+```html
+index.html裡：
+<script src="app.js" type="module"></script>
+...
+<body>
+  <button id="prevMonth">-</button>
+  <input type="text" id="currentMonth" />
+  <button id="nextMonth">+</button>
+</body>
+```
+
+```js
+// npm i dayjs
+題：製作月份計算器
+
+import dayjs from "dayjs";
+let thisMonth = dayjs(); // 現在
+
+const prevMonth = document.querySelector("#prevMonth");
+const nextMonth = document.querySelector("#nextMonth");
+const currentMonth = document.querySelector("#currentMonth");
+
+prevMonth.addEventListener("click", () => {
+  thisMonth = thisMonth.subtract(1, "month");
+  setMonthValue();
+});
+nextMonth.addEventListener("click", () => {
+  thisMonth = thisMonth.add(1, "month");
+  setMonthValue();
+});
+
+setMonthValue();
+// 程式碼從上到下執行時，需先呼叫一次 setMonthValue()，網頁剛打開時 #currentMonth 的欄位會才不會是空的。
+
+function setMonthValue() {
+  currentMonth.value = thisMonth.format("YYYY/M");
+}
+```
+
+> 4/27 dayjs筆記 結束
+
+```js
+// scope（作用域）= 去哪裡找東西
+
+Block Scope（區塊作用域）：let 與 const 的地牢
+
+{}關得住let和const，關不住var。
+常見的Block Scope有if判斷式和for迴圈。
+
+示範：
+if (true) {
+    let blockLet = "我在裡面";
+}
+// 牆外的人
+console.log(blockLet); // ❌ 噴錯：找不到 blockLet
+----------------------------------
+function scope（函式作用域）：var 的地牢
+
+var 會穿透 if 或 for 的括號，直到遇到 function 才停下來；而 let/const 只要遇到 {} 就會被關住。
+
+示範：
+function myRoom() {
+    if (true) {
+        var ghost = "我在這！"; // 雖然在 if 裡面
+    }
+    console.log(ghost); // ✅ 抓得到！因為 var 穿透了 if 的牆
+}
+----------------------------------
+var let const 都可以從內部看見外部。
+如果內部找不到某個變數，它會往上一層的環境去搜尋，直到最外層（Window 或 Global）。
+----------------------------------
+lexical scope：（詞法作用域）
+找變數時會去它被定義的地方找，而不是去執行的地方。
+————————————————————————————————————————————
+//closure 閉包
+外面的變數被打包帶走，這個變數就叫 scope free variable 自由變數。
+
+for (var i = 0; i<3; i++) {
+setTimeout(() => {
+console.log(i)
+}, 1000)
+}
+印出3個3
+----------------------------------
+for (let i = 0; i<3; i++) {
+setTimeout(() => {
+console.log(i)
+}, 1000)
+}
+印出 0 1 2
+----------------------------------
+//必須用 var 但又要印出 0 1 2
+// IIFE用法
+for (var i = 0; i < 3; i++) {
+  (function (n) {
+    setTimeout(() => {
+      console.log(n);
+    }, 1000);
+  })(i);
+}
+————————————————————————————————————————————
+//匿名函式
+// IIFE = Immediately Invoked Function Expression是JS中一種在定義後立即執行的函式
+
+第一種
+(function () {
+  console.log(123);
+})();
+
+第二種
+(function (x) {
+  console.log(x);
+})(123);
+```
+
+```js
+//物件導向程式設計 OOP
+1.所有JS物件都有 __proto__ 屬性，空值例外 null.__proto__
+2.所有JS函式都有 prototype 屬性，預設值是空物件{}
+————————————————————————————————————————————
+// 工廠函式 缺點：耗記憶體
+function heroCreator(name, age) {
+  const hero = {
+    name: name,
+    age: age,
+    attack: function () {
+      console.log("ATTACK!");
+    },
+    sleep: function () {
+      console.log("Zzzzz!");
+    },
+  };
+
+  return hero;
+}
+
+const h1 = heroCreator("nancy", 18);
+const h2 = heroCreator("kitty", 20);
+----------------------------------
+// 原型繼承(原型打造) 優點：省記憶體
+const actions = {
+  attack: function () {
+    console.log("ATTACK!");
+  },
+  sleep: function () {
+    console.log("ZZZZ");
+  },
+};
+
+function heroCreator(name, age) {
+  // 以 ... 為原型打造物件
+  const h = Object.create(actions);
+
+  Object.create(actions)直接建立兩個物件之間的父子關係，把 actions物件掛到 h 的 __proto__ 上，或者說把 h 的 __proto__ 指向生他的actions物件。
+
+  h.name = name;
+  h.age = age;
+
+  return h;
+}
+// h1 和 h2 透過 __proto__ 指向同一個 actions 物件
+const h1 = heroCreator("nancy", 18);
+const h2 = heroCreator("kitty", 20);
+————————————————————————————————————————————
+const o = {hello:123, world:456}
+o.hello  <-- 123
+o.hi     <-- undefined
+o.__proto__  <-- 物件 找不到我要的它就往下一個找
+o.__proto__.__proto__  <-- null => undefined
+----------------------------------
+function heroCreator2( 傳進來的參數 ) {
+  this.存進去的名稱 = 傳進來的參數;
+}
+
+function heroCreator2(name, age) {
+
+  1. this ---> { } 把this指向某個空物件
+  把 this 的 __proto__ 指向生這個物件的函式的prototype，prototype預設值是空物件。
+
+  this.name = name; //可以寫成 this.a = name
+  this.age = age; //可以寫成 this.b = age
+
+  2. return this
+  下面有new，函數執行完後，它會自動回傳 this 物件，所以不用return
+  如果沒有new就是一般函式要有return，如果也沒有return，就會undefined
+  建構函式的回傳覆蓋：如果同時寫了return和下面的new，return後面若帶數字或字串(原始型別)就會被忽略，但如果帶物件型別(一般物件 {}、陣列 []、函式 function)就不會忽略return，會回傳return的東西。
+}
+heroCreator2.prototype = actions;
+
+const h1 = new heroCreator2("nancy", 18);
+----------------------------------
+// class 類別 例如：String, Array
+// instance 實體 例如：h1, h2...
+// instance = new class()
+const s = "hello";
+String.prototype.hi = 123;
+s.hi;
+Array.prototype.myMap = function () {
+  console.log("my map");
+};
+----------------------------------
+// constructor建構函式
+
+// 這個class是 prototype chain 的語法糖衣
+class heroCreator3 {
+  constructor(name, age) {
+    this.name = name;
+    this.age = age;
+  }
+
+  sayMyName() {
+    console.log(`hi, ${this.name}`);
+    // `hi, ${...}`在字串中直接嵌入變數或表達式，不需要用一堆 + 號來連接。
+  }
+
+  attack() {
+    console.log("ATTACK!");
+  }
+
+  sleep() {
+    console.log("ZZZZ");
+  }
+}
+
+const h1 = new heroCreator3("nancy", 18);
+```
+
+```js
+// 複習 Scope（作用域）
+var a = 1;
+
+function hi() {
+  a = 2;
+  console.log(a); //印出2
+  var a = 3;
+}
+
+在函式裡面第1246行想把a改成2，找到第1248行有a，所以不用去函式外面找第1行
+所以第1247行印出2。
+第1256行在函式外，所以去找第1243行
+
+hi();
+console.log(a); // 印出1
+----------------------------------
+var a = 1;
+
+function hi() {
+  a = 2;
+  console.log(a); //印出2
+}
+
+函式裡沒有a，往外找到第1258行，所以第1262行印出2
+外面的第行被改成1258了，所以第1269行印出2
+
+hi();
+console.log(a); // 印出2
 ————————————————————————————————————————————
 ```
+
+> 5/4 開始
 
 ```js
 //
@@ -963,11 +1278,9 @@ npm run dev
 ————————————————————————————————————————————
 ```
 
-```js
-//
-結果
-————————————————————————————————————————————
-```
+> 5/4 結束
+
+> 5/5 開始
 
 ```js
 //
@@ -975,20 +1288,4 @@ npm run dev
 ————————————————————————————————————————————
 ```
 
-```js
-//
-結果
-————————————————————————————————————————————
-```
-
-```js
-//
-結果
-————————————————————————————————————————————
-```
-
-```js
-//
-結果
-————————————————————————————————————————————
-```
+> 5/5 結束
