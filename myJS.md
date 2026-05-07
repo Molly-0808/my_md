@@ -889,11 +889,13 @@ console.log(3);
 ### XMLHttpRequest()
 
 ```js
+//XMLHttpRequest()示範一
 const api = "https://typicode.com";
+
 const req = new XMLHttpRequest();
+
 req.addEventListener("load", function () {
   const posts = JSON.parse(req.responseText);
-  // 處理 posts 的顯示
 });
 req.open("GET", api);
 req.send();
@@ -904,11 +906,78 @@ fetch(api)
   .then((posts) => console.log(posts));
 ```
 
+```js
+//XMLHttpRequest()示範二
+const api = "https://jsonplaceholder.typicode.com/posts";
+
+//建立網路傳送器 (XMLHttpRequest)
+const req = new XMLHttpRequest();
+
+req.addEventListener("load", () => {
+  const posts = JSON.parse(req.responseText);
+  posts.forEach((post) => {
+    console.log(post);
+  });
+});
+
+req.open("GET", api); // 準備用 GET 方式（拿取資料）去這個地址
+
+req.send(); // 正式按下發送鈕
+```
+
+```js
+//XMLHttpRequest()示範三:抓每一篇文章的title
+const api = "https://jsonplaceholder.typicode.com/posts";
+
+const req = new XMLHttpRequest();
+
+req.addEventListener("load", () => {
+  const posts = JSON.parse(req.responseText);
+  posts.forEach((post) => {
+    console.log(post.title);
+  });
+});
+
+req.open("GET", api);
+
+req.send();
+```
+
 ### fetch & then
+
+fetch 是一個非同步行為，它會回傳一個Promise。
+
+fetch是瀏覽器提供的方法，不是JS提供的。
 
 ![querySelector vs fetch](./image/querySelector_fetch.png)
 
-![fetch](./image/fetch.png)
+```js
+//fetch示範一
+const api = "https://jsonplaceholder.typicode.com/posts";
+
+fetch(api)
+  .then((resp) => {
+    return resp.json();
+  })
+  .then((data) => {
+    console.log(data);
+  });
+```
+
+```js
+//fetch示範二:抓每一篇文章的title
+const api = "https://jsonplaceholder.typicode.com/posts";
+
+fetch(api)
+  .then((resp) => {
+    return resp.json();
+  })
+  .then((data) => {
+    data.forEach((d) => {
+      console.log(d.title);
+    });
+  });
+```
 
 ```js
 // fetch 搭配 then 非同步抓取資料
@@ -965,10 +1034,32 @@ p1.then(x => console.log(x))
   .catch(err => console.log(err)); // 1 秒後會印出 "出錯啦！"
 ```
 
-## aynsc & await / try & catch
+### aynsc & await / try & catch
+
+async 是「非同步」（Asynchronous） 的縮寫。
+
+如果想在函式內使用await（用來等待 API 回傳資料），函式的前面一定要加上 async。
+
+async 函式執行後會回傳一個 Promise 物件。
 
 ```js
-// aynsc & await 承上題
+const api = "https://jsonplaceholder.typicode.com/posts";
+
+async function getPost() {
+  const resp = await fetch(api);
+  const posts = await resp.json();
+
+  posts.forEach((post) => {
+    console.log(post.title);
+  });
+}
+
+getPost();
+console.log("go!");
+```
+
+```js
+// aynsc & await 承「建立一個 Promise 物件」題
 結果 1 -> (等一秒) -> ok123 -> 2
 
 await的行為（同步化寫法）
@@ -985,6 +1076,8 @@ console.log(2);
 // 當程式執行到 const result = await p1; 時，它會「暫停」後續程式碼（即 console.log(2)）的執行。等到 1 秒鐘 Promise 變成 resolve 狀態後，拿到值並賦予給 result，才繼續往下執行。
 ```
 
+比較 then & catch 寫法：
+
 ```js
 // then & catch 承上題
 結果 1 → (過一秒) → ok123 → 2
@@ -999,6 +1092,15 @@ p1.then((x) => {
   console.log(err);
 });
 ```
+
+### Event Loop 事件循環
+
+- 呼叫堆疊 (Call Stack)
+- 等待區 (Web APIs)
+- 微任務佇列 (Microtask Queue)
+- 宏任務佇列 (Macrotask Queue)
+
+![](./image/call_stack.png)
 
 ## YouBike練習題
 
@@ -1473,18 +1575,163 @@ console.log(a); // 印出2
 ————————————————————————————————————————————
 ```
 
-> 5/4 開始
+## this
+
+this 代名詞 決定了誰正在執行這段程式碼
+
+1. 誰呼叫，誰就是 this，跟它怎麼被定義無關，只跟呼叫方式有關。
+2. 是否有使用 new
+3. 是否有使用箭頭函式() => {} // 2和3不能同時使用
+4. 是否有使用 call / apply / bind
+5. 是否有使用「嚴格模式」
 
 ```js
-//
-結果
-————————————————————————————————————————————
+const hero = {
+  name: "cc",
+  age: 18,
+  attack: function () {
+    console.log(this);
+  },
+};
+
+hero.attack();
+
+// hero就是呼叫者this
 ```
 
-> 5/5 開始
+```js
+function hi() {
+  function hey() {
+    console.log(this);
+  }
+
+  hey();
+}
+
+hi();
+
+這邊的this指向全域物件，因為它前面沒有東西，不像上方那組的hero。
+```
 
 ```js
-//
-結果
-————————————————————————————————————————————
+function hi() {
+  console.log(this);
+}
+
+new hi();
+
+物件導向，使用 new 關鍵字時，this 會指向剛被創造出來的空物件。
+```
+
+```js
+const hi = (a, b, c) => {
+  console.log(arguments);
+};
+
+hi(1, 2, 3);
+
+箭頭函式沒有arguments，找不到arguments就會往外找，找不到就會壞掉。
+箭頭函式也沒有this，找不到this就會往外找，通常外面會有一個this指向window全域，所以最後會指向全域變數。
+```
+
+```js
+arguments：沒有「...收展功能」前都用這個拿參數
+function hi(a, b, c) {
+  console.log(arguments);
+}
+
+hi(1, 2, 3);
+```
+
+```js
+// 使用 .call() 和 .apply() 來強行奪取 this 的控制權
+const hero = {
+  name: "cc",
+  age: 18,
+  attack: function () {
+    console.log(this);
+  },
+};
+
+const arr = [1, 2, 3];
+
+hero.attack.call(arr, "aa", "bb");
+
+// 意思是：我要執行 hero 裡的 attack 函式，但請把內部的 this 硬改成 arr。
+
+hero.attack.apply(arr, ["aa", "bb"]);
+
+// 功能同上，call和apply擇一使用，唯一不同的地方是帶參數的方式不一樣。
+如果我要帶入的東西是陣列，推薦用apply。
+```
+
+```js
+// 使用 .bind() 產生一個「硬綁定」的新函式。「硬」指不可被覆蓋。
+
+const hero = {
+  name: "cc",
+  age: 18,
+  attack: function () {
+    console.log(this);
+  },
+};
+
+const arr = ["x", "y", "z"];
+
+const aa = hero.attack.bind(arr);
+aa();
+
+雖然aa()前面沒有東西，但透過bind已經把陣列綁定在this了，所以執行aa()的結果是陣列。
+如果只打aa，沒有執行，印出來會是一個 function。
+```
+
+```js
+// 嚴格模式
+結果 undefined
+
+function hi() {
+  "use strict";
+  console.log(this);
+}
+
+hi();
+
+當我呼叫 hi()（前面沒有點，也沒有 new）JS會自動把 全域物件 (window) 指派給它(非嚴格模式)。
+然後嚴格模式 ("use strict")的JS會認為既然我沒有指定是誰呼叫的，那 this 應該要是空的。
+```
+
+```js
+// 練習題：不用 var that = this 來解題
+var person = {
+  name: "cc",
+  sayHi: function () {
+    console.log("我是" + this.name); // this 是 person
+
+    var that = this; // 過時的方法
+
+    setTimeout(function () {
+因為setTimeout裡面的匿名函式是由系統全域（window）呼叫的，為了讓內層函式能存取到外層的 person 物件，開發者會宣告一個變數（that）來捕捉當時正確的 this，然後that 只是一個普通的變數，它會被內層函式透過「閉包機制」保留下來。
+      console.log("我是" + that.name);
+    }, 0);
+  },
+};
+
+person.sayHi();
+//----------------------------------
+// 答案：用IIFE(立即執行函式運算式)
+var person = {
+  name: "cc",
+  sayHi: function () {
+    console.log("我是" + this.name);
+
+    setTimeout(
+      function () {
+        console.log("我是" + this.name);
+      }.bind(this),
+      0,
+    );
+  },
+};
+
+person.sayHi();
 ```
