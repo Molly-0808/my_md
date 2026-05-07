@@ -530,6 +530,15 @@ const total = nums.filter(isOdd).map(square).reduce(add);
 console.log(total);
 ```
 
+```js
+// 陣列解構
+結果 A B
+————————————————————————————————————————————
+const heroes = ["A", "B", "C", "D"];
+let [h1, h2] = heroes;
+console.log(h1, h2);
+```
+
 ## 物件
 
 ```js
@@ -548,6 +557,13 @@ console.log(a.name);
 
 ## DOM
 
+HTML 本身只是純文字檔案，JavaScript 無法直接與之互動。DOM 就像是一個介面或橋樑，讓我做到：
+
+- 查詢：querySelector。
+- 建立：createElement。
+- 刪除：remove()。
+- 監聽：addEventListener。
+
 ```js
 // getElement
 document.getElementById("idname");
@@ -560,9 +576,31 @@ document.querySelectorAll();
 
 ![DOM](./image/DOM.png)
 
-## addEventListener() 監聽器
+### DOM更多操作： createElement() / textContent / appendChild() 
+
+```js
+const hello = document.querySelector("#hello");
+
+const h = document.createElement("h1");
+
+h.textContent = "h123";
+// 標籤內容變成 <h1>h123</h1>
+hello.appendChild(h);
+// 把這顆 h1 塞進 hello 容器的最後面
+```
+
+### Event Flow 事件流程
+
+- 捕獲階段 (Capture Phase)
+- 目標階段 (Target Phase)
+- 冒泡階段 (Bubbling Phase)
+
+![](./image/event_flow.png)
+
+### DOM 和 addEventListener() 監聽器 練習題
 
 ```html
+html裡：
 ...
   <head>
 ...
@@ -660,7 +698,32 @@ btn.addEventListener("click", () => {
 });
 ```
 
+```js
+// 預設不要轉去超連結
+————————————————————————————————————————————
+const link = document.querySelector("#link")
+
+// 監聽 click 事件，當發生的時候就...
+link.addEventListener("click", function (e) {
+  e.preventDefault() // 把原本預設的行為停下來
+  console.log("我被按了")
+})
+
+```
+
 ## ES6
+
+```js
+// `${}`用法 示範字串拼接
+let name = "悟空";
+let age = 18;
+
+// 用 + 號串接
+console.log("大家好，我的名字是" + name + "，我今年" + age + "歲");
+
+// 把變數帶進去
+console.log(`大家好，我的名字是${name}，我今年${age}歲`);
+```
 
 ```js
 const name = hero.name
@@ -671,6 +734,18 @@ console.log(name, age)
 ```
 
 ### 「...」其餘參數
+
+```js
+// 把陣列組合起來 (和 concat 比較)
+————————————————————————————————————————————
+const H1 = ["A", "B", "C"]
+const H2 = ["X", "Y", "Z"]
+
+// const HAll = H1.concat(H2)
+const HAll = [...H1, ...H2]
+
+console.log(HAll)
+```
 
 ```js
 // 其餘參數語法
@@ -721,7 +796,21 @@ console.log(result);
 ```
 
 ```js
-// 展開運算子並將陣列拆解為獨立的參數
+// 陣列被當作單一參數傳進函式
+結果 [1, 2, 3, 4, 5] undefined undefined
+
+因為只傳入一個東西（整個陣列），只有a拿到。
+————————————————————————————————————————————
+const nums = [1, 2, 3, 4, 5];
+function hi(a, b, c) {
+  console.log(a, b, c);
+}
+
+hi(nums);
+```
+
+```js
+// 承上題的解法：展開運算子並將陣列拆解為獨立的參數
 結果 1 2 3
 ————————————————————————————————————————————
 const nums = [1, 2, 3, 4, 5];
@@ -793,6 +882,24 @@ setTimeout(() => {
   console.log(2);
 }, 1000);
 console.log(3);
+```
+
+## XMLHttpRequest() 抓取網路資料
+
+```js
+const api = "https://typicode.com";
+const req = new XMLHttpRequest();
+req.addEventListener("load", function () {
+  const posts = JSON.parse(req.responseText);
+  // 處理 posts 的顯示
+});
+req.open("GET", api);
+req.send();
+
+必較現代寫法fetch;
+fetch(api)
+  .then((res) => res.json())
+  .then((posts) => console.log(posts));
 ```
 
 ## fetch & then
