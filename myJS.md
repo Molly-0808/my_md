@@ -1,3 +1,5 @@
+## for迴圈
+
 ```js
 // for 迴圈 印0到9的奇數
 結果 1 3 5 7 9
@@ -78,6 +80,26 @@ for (let j = 0; j < 3; j += 1) {
 ```
 
 ```js
+// 巢狀迴圈 印出九九乘法表
+結果
+被乘數 * 乘數 = 計算結果
+1 * 1 = 1 ~ 1 * 9 = 9
+2 * 1 = 2 ~ 2 * 9 = 18
+以此類推持續印出直到
+9 * 1 = 9 ~ 9 * 9 = 81
+
+外層迴圈 i 是被乘數; 內層迴圈 j 是乘數。
+————————————————————————————————————————————
+for (i = 1; i <= 9; i++) {
+  for (j = 1; j <= 9; j++) {
+    console.log(`${i} * ${j} = ${i * j}`);
+  }
+}
+```
+
+## 補字 if...else if... / .padStart(總長度, "想補的字")
+
+```js
 // if...else if...else... 數字補零
 結果 003 因為88行n是3
 
@@ -106,6 +128,8 @@ let n = 3;
 let result = String(n).padStart(3, "0");
 console.log(result);
 ```
+
+## "想印的字".repeat()
 
 ```js
 // 用 "想印的字".repeat(i) 印出對齊左側的聖誕樹
@@ -138,7 +162,7 @@ for (let i = 1; i <= 9; i += 1) {
 ```
 
 ```js
-// for 迴圈 印出
+// 用 "想印的字".repeat(i) 印出完整的聖誕樹
 結果
     *         4 空格 + 1 星
    ***        3 空格 + 3 星
@@ -152,6 +176,8 @@ for (let i = 0; i < 5; i += 1) {
   console.log(" ".repeat(spaces) + "*".repeat(stars));
 }
 ```
+
+## function 函式
 
 ```js
 // 函式基本定義及呼叫方式
@@ -294,6 +320,8 @@ function hi(a) {
 hi(hey);
 ```
 
+## Array 陣列
+
 ```js
 // 陣列索引
 結果 y t v v
@@ -318,6 +346,29 @@ for (let i = 0; i < arr.length; i++) {
   console.log(arr[i]);
 }
 ```
+
+### unshift / push / shift / pop
+
+|      |           前           |                  後 |
+| :--- | :--------------------: | ------------------: |
+| 加入 | .unshift(想加入的名稱) | .push(想加入的名稱) |
+| 抽出 |  .shift()括號內不用寫  |  .pop()括號內不用寫 |
+
+![前後加入](./image/unshift_push.png)
+
+![前後抽出](./image/shift_pop.png)
+
+### splice()
+
+![從中間抽走並加入](./image/splice.png)
+
+![從中間抽走並加入](./image/splice_2.png)
+
+### concat
+
+![把陣列組合起來](./image/concat.png)
+
+## forEach / filter / map / reduce / every / some 陣列高階函式
 
 ```js
 // forEach
@@ -347,6 +398,22 @@ nums.forEach((i) => {...})
 ```
 
 ```js
+// push 搭配空陣列和forEach
+結果 [2, 4, 6, 8, 10]
+————————————————————————————————————————————
+const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const result = [];
+nums.forEach((i) => {
+  if (i % 2 === 0) {
+    result.push(i); //發現偶數時手動「推入」空陣列
+  }
+});
+console.log(result);
+```
+
+![老師的圖](./image/老師的圖.png)
+
+```js
 // filter
 結果 [2, 4, 6, 8, 10]
 
@@ -372,20 +439,6 @@ console.log(result);
 用箭頭函式簡寫：
 const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const result = nums.filter(el => el % 2 == 0);
-console.log(result);
-```
-
-```js
-// push 搭配空陣列和forEach
-結果 [2, 4, 6, 8, 10]
-————————————————————————————————————————————
-const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-const result = [];
-nums.forEach((i) => {
-  if (i % 2 === 0) {
-    result.push(i); //發現偶數時手動「推入」空陣列
-  }
-});
 console.log(result);
 ```
 
@@ -418,8 +471,31 @@ const result = nums.reduce((a, b) => {
   return a + b;
 }, 0);
 console.log(result);
-
 ```
+
+![reduce流程圖](./image/reduce.png)
+
+```js
+// every() 全選才算對
+結果 true
+————————————————————————————————————————————
+const scores = [70, 85, 90];
+const allPassed = scores.every(function (score) {
+  return score > 60;
+});
+console.log(allPassed);
+```
+
+```js
+// some() 只要一個對就行
+結果 false
+————————————————————————————————————————————
+const fruits = ["apple", "banana", "cherry"];
+const hasStrawberry = fruits.some((fruit) => fruit === "strawberry");
+console.log(hasStrawberry);
+```
+
+### filter / map / reduce 綜合練習
 
 ```js
 // 印出 1 ~ 10 之間所有的奇數的平方和
@@ -454,6 +530,8 @@ const total = nums.filter(isOdd).map(square).reduce(add);
 console.log(total);
 ```
 
+## 物件
+
 ```js
 // 物件
 結果 1
@@ -468,27 +546,21 @@ console.log(a["name"]);
 console.log(a.name);
 ```
 
-```js
-// every() 全選才算對
-結果 true
-————————————————————————————————————————————
-const scores = [70, 85, 90];
-const allPassed = scores.every(function (score) {
-  return score > 60;
-});
-console.log(allPassed);
-```
+## DOM
 
 ```js
-// some() 只要一個對就行
-結果 false
-————————————————————————————————————————————
-const fruits = ["apple", "banana", "cherry"];
-const hasStrawberry = fruits.some((fruit) => fruit === "strawberry");
-console.log(hasStrawberry);
+// getElement
+document.getElementById("idname");
+document.getElementsByClassName("classname");
+// querySelector
+document.querySelector("#idname");
+document.querySelector(".classname");
+document.querySelectorAll();
 ```
 
-> 4/13監聽器筆記 開始
+![DOM](./image/DOM.png)
+
+## addEventListener() 監聽器
 
 ```html
 ...
@@ -588,9 +660,7 @@ btn.addEventListener("click", () => {
 });
 ```
 
-> 4/13監聽器筆記 結束
-
-> 4/13 ES6筆記 開始
+## ES6
 
 ```js
 const name = hero.name
@@ -599,6 +669,8 @@ const age = hero.age
 const {name , age} = hero
 console.log(name, age)
 ```
+
+### 「...」其餘參數
 
 ```js
 // 其餘參數語法
@@ -660,23 +732,30 @@ hi(...nums); // 等於執行：hi(1, 2, 3, 4, 5)
 ```
 
 ```js
-我看不懂
+// 函式共用
+
+不論點擊 aa 還是 bb，都會跑同一個 h 函式。
 ————————————————————————————————————————————
 // e.target
 // e.currentTarget
-const h = () => {
-  console.log(e.target);
+
+這裡有省略抓資料的過程 沒寫出來
+例如 document.querySelector("#aa")
+
+const h = (e) => {
+  console.log(e.target); // 在控制台印出使用者點擊了什麼
 };
 aa.addEventListener("click", h);
 bb.addEventListener("click", h);
 ```
 
-> 4/13 ES6筆記 結束
+## setTimeout() / setInterval()
 
 ```js
 // 非同步
 // stack堆疊: first in, last out(FILO)
 // queue: first in, first out (FILO)
+
 先放到旁邊排隊，程式不會在這裡停下來等 ，而是會繼續往下執行其他的程式碼， 3 秒鐘一到，瀏覽器才會跳回來執行 console.log(123)
 ————————————————————————————————————————————
 setTimeout(() => {
@@ -686,6 +765,7 @@ setTimeout(() => {
 
 ```js
 // 循環執行 Interval間隔
+
 每隔 3 秒鐘它就會在控制台印出一次 123，它不會停止，直到關閉網頁或手動叫停
 ————————————————————————————————————————————
 setInterval(() => {   //會一直印
@@ -715,6 +795,8 @@ setTimeout(() => {
 console.log(3);
 ```
 
+## fetch & then
+
 ```js
 // fetch 搭配 then 非同步抓取資料
 結果 會抓到一個 Response 物件
@@ -732,6 +814,8 @@ result.then((x) => {
   console.log(x);
 });
 ```
+
+## new Promise / then & catch / resolve & reject
 
 ```js
 // 建立一個 Promise 物件
@@ -768,6 +852,8 @@ p1.then(x => console.log(x))
   .catch(err => console.log(err)); // 1 秒後會印出 "出錯啦！"
 ```
 
+## aynsc & await
+
 ```js
 // aynsc & await 承上題
 結果 1 -> (等一秒) -> ok123 -> 2
@@ -800,6 +886,8 @@ p1.then((x) => {
   console.log(err);
 });
 ```
+
+## YouBike練習題
 
 ```js
 // YouBike練習一 then...catch (Promise 鏈結)
@@ -871,6 +959,8 @@ a.forEach((i) => {
 });
 ```
 
+## module / export & import
+
 如果同個HTML需要匯入多個JS但順序很複雜怎麼辦?
 
 同時想匯入lib.js和app.js
@@ -916,7 +1006,7 @@ console.log(hh); 就不會重複兩個hi了
 import cc from "./lib.js";
 ```
 
-> npm
+## npm / package.json
 
 建立package.json
 ![建立package.json](./image/1.jpg)
@@ -951,7 +1041,7 @@ import cc from "./lib.js";
 npm run dev
 ![npm run dev](./image/11.jpg)
 
-> 4/27 axios筆記 開始
+## axios
 
 ```html
 index.html裡：
@@ -1007,9 +1097,7 @@ try {
 }
 ```
 
-> 4/27 axios筆記 結束
-
-> 4/27 dayjs筆記 開始
+## dayjs
 
 ```html
 index.html裡：
@@ -1050,7 +1138,7 @@ function setMonthValue() {
 }
 ```
 
-> 4/27 dayjs筆記 結束
+## Block Scope / function scope / lexical scope / closure / IIFE
 
 ```js
 // scope（作用域）= 去哪裡找東西
@@ -1125,6 +1213,8 @@ for (var i = 0; i < 3; i++) {
   console.log(x);
 })(123);
 ```
+
+## **proto** / prototype / 原型打造 / 語法糖衣
 
 ```js
 //物件導向程式設計 OOP
@@ -1248,12 +1338,12 @@ function hi() {
   var a = 3;
 }
 
-在函式裡面第1246行想把a改成2，找到第1248行有a，所以不用去函式外面找第1行
-所以第1247行印出2。
-第1256行在函式外，所以去找第1243行
-
 hi();
 console.log(a); // 印出1
+
+在函式裡面a = 2這行的意思是想把a改成2，找到var a = 3有a，所以不用去函式外面找var a = 1。
+所以a = 2下面那行印出2。
+最後的console.log(a)在函式外，所以去找最上面的var a = 1。
 ----------------------------------
 var a = 1;
 
@@ -1262,11 +1352,11 @@ function hi() {
   console.log(a); //印出2
 }
 
-函式裡沒有a，往外找到第1258行，所以第1262行印出2
-外面的第行被改成1258了，所以第1269行印出2
-
 hi();
 console.log(a); // 印出2
+
+函式裡沒有a，往外找到var a = 1，所以a = 2下面那行印出2
+外面的var a = 1被改成2了，所以最後印出2。
 ————————————————————————————————————————————
 ```
 
@@ -1278,8 +1368,6 @@ console.log(a); // 印出2
 ————————————————————————————————————————————
 ```
 
-> 5/4 結束
-
 > 5/5 開始
 
 ```js
@@ -1287,5 +1375,3 @@ console.log(a); // 印出2
 結果
 ————————————————————————————————————————————
 ```
-
-> 5/5 結束
