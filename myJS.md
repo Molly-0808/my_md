@@ -555,7 +555,7 @@ console.log(a["name"]);
 console.log(a.name);
 ```
 
-## DOM
+## DOM：querySelector等多種方法
 
 HTML 本身只是純文字檔案，JavaScript 無法直接與之互動。DOM 就像是一個介面或橋樑，讓我做到：
 
@@ -884,7 +884,9 @@ setTimeout(() => {
 console.log(3);
 ```
 
-## XMLHttpRequest() 抓取網路資料
+## 抓取網路資料
+
+### XMLHttpRequest()
 
 ```js
 const api = "https://typicode.com";
@@ -902,7 +904,11 @@ fetch(api)
   .then((posts) => console.log(posts));
 ```
 
-## fetch & then
+### fetch & then
+
+![querySelector vs fetch](./image/querySelector_fetch.png)
+
+![fetch](./image/fetch.png)
 
 ```js
 // fetch 搭配 then 非同步抓取資料
@@ -922,7 +928,7 @@ result.then((x) => {
 });
 ```
 
-## new Promise / then & catch / resolve & reject
+### new Promise / then & catch / resolve & reject
 
 ```js
 // 建立一個 Promise 物件
@@ -959,7 +965,7 @@ p1.then(x => console.log(x))
   .catch(err => console.log(err)); // 1 秒後會印出 "出錯啦！"
 ```
 
-## aynsc & await
+## aynsc & await / try & catch
 
 ```js
 // aynsc & await 承上題
