@@ -50,7 +50,7 @@ console.log(total);
 // while 迴圈 印出1到9
 結果 1 2 3 4 5 6 7 8 9
 
-53和54行調換順序結果會變成2 3 ...9 10
+console.log(i) 和 i += 1 調換順序會變成2 3 ...9 10
 ————————————————————————————————————————————
 let i = 1;
 while (i < 10) {
@@ -320,6 +320,39 @@ function hi(a) {
 hi(hey);
 ```
 
+```js
+// 計算 BMI 並回傳四捨五入到小數點後兩位的數值
+結果 24.22
+————————————————————————————————————————————
+function bmiCalculator(height, weight) {
+  let h = height / 100
+  let bmi = weight / (h * h)
+
+  下方兩種方法擇一去return
+  // Math.round(bmi * 100) / 100 回傳數字
+  // bmi.toFixed(2) 回傳字串
+
+  return Math.round(bmi * 100) / 100
+}
+
+console.log(bmiCalculator(170, 70))
+```
+
+```js
+// 判斷閏年
+結果
+true
+false
+————————————————————————————————————————————
+function isLeapYear(year) {
+  return (year % 4 === 0 && year % 100 !== 0)
+  || year % 400 === 0
+}
+
+console.log(isLeapYear(2020))
+console.log(isLeapYear(2021))
+```
+
 ## Array 陣列
 
 ```js
@@ -576,24 +609,137 @@ document.querySelectorAll();
 
 ![DOM](./image/DOM.png)
 
-### DOM更多操作： createElement() / textContent / appendChild() 
+### 更多DOM操作： createElement() / textContent / appendChild() / remove() / removeChild() / parentElement / children / previousElementSibling / nextElementSibling / insertAdjacentElement("", ) / insertAdjacentHTML("", )
+
+示範 createElement() / textContent / appendChild()：
 
 ```js
 const hello = document.querySelector("#hello");
+左邊hello是自己取名的JS的變數名稱;
+右邊的hello是去HTML找的ID名稱;
 
 const h = document.createElement("h1");
+// 創造一個h1
 
-h.textContent = "h123";
-// 標籤內容變成 <h1>h123</h1>
+h.textContent = "hi~";
+// 加入h1標籤內容 <h1>hi~</h1>
+
+const d = document.createElement("div");
+// 再創造一個div
+
+d.textContent = "I am div";
+// 加入div標籤內容 <div>I am div</div>
+
+h.appendChild(d);
+// 在h(也就是h1)裡面的最後面加入d(也就是div)
+
 hello.appendChild(h);
-// 把這顆 h1 塞進 hello 容器的最後面
+// 在hello(也就是最前面抓的id叫hello的容器)裡面的最後面加入h(也就是h1)
 ```
+
+示範 remove() / removeChild()：
+
+![remove-html](./image/remove-html.png)
+
+```js
+// 用 remove() / removeChild() 拿掉ul的最後一個li
+
+const btn = document.querySelector("#removeBtn");
+
+btn.addEventListener("click", () => {
+  const lastOne = document.querySelector("li:last-child");
+
+  if (lastOne) {
+    const u = document.querySelector("ul");
+    u.removeChild(lastOne);
+    // 另一個寫法是：拿掉上面這兩行，改成lastOne.remove();這行即可。
+  }
+});
+```
+
+示範：parentElement / children：
+
+```js
+// 用 parentElement() 取得上層元素
+
+const lastOne = document.querySelector("li:last-child")
+
+取得上層 Element
+console.log(lastOne.parentElement)
+
+取得上層 Node
+console.log(lastOne.parentNode)
+
+// 建議用parentElement
+```
+
+```js
+// 用 children 取得下層元素
+
+const ul = document.querySelector("ul")
+
+取得子層 Element
+console.log(ul.children)
+
+取得子層 Node
+console.log(ul.childNodes)
+
+// 建議用 children
+```
+
+示範：previousElementSibling / nextElementSibling：
+
+```js
+// 用 previousElementSibling / nextElementSibling 取得兄弟姐妹元素
+const li = document.querySelector("li:nth-child(2)");
+
+// Element 系列
+取得上一個;
+console.log(li.previousElementSibling);
+
+取得下一個;
+console.log(li.nextElementSibling);
+
+// Node 系列
+取得上一個;
+console.log(li.previousSibling);
+
+取得下一個;
+console.log(li.nextSibling);
+```
+
+示範：insertAdjacentElement("", ) / insertAdjacentHTML("", )：
+
+```js
+// 用 insertAdjacentElement("位置", 變數或常數名稱) 在指定位置安插元素物件
+
+const ul = document.querySelector("ul");
+
+const li = document.createElement("li");
+li.textContent = "X";
+
+ul.insertAdjacentElement("afterend", li);
+----------------------------------
+// 用 insertAdjacentHTML("位置", 變數或常數名稱) 在指定位置安插HTML字串
+
+const ul = document.querySelector("ul");
+
+const li = "<li>Z</li>";
+
+ul.insertAdjacentHTML("afterbegin", li);
+
+// 建議用 insertAdjacentHTML
+```
+
+![指定位置](image/beforebegin.png)
 
 ### Event Flow 事件流程
 
+```js
 - 捕獲階段 (Capture Phase)
 - 目標階段 (Target Phase)
 - 冒泡階段 (Bubbling Phase)
+```
 
 ![](./image/event_flow.png)
 
@@ -690,11 +836,12 @@ const weight = document.querySelector("#weight");
 btn.addEventListener("click", () => {
   const h = Number(height.value) / 100;
   const w = Number(weight.value);
-  // Number()把其他類型的資料（通常是字串）轉換成數字
+  // Number()把其他類型的資料（大多時候是字串）轉換成數字
+
   // bmi.value = w / h ** 2;
   const result = w / h ** 2;
   bmi.value = result.toFixed(2);
-  // .toFixed() 取小數點後第幾位 括號裡寫數字表示取到第幾位
+  // .toFixed() 取小數點後第幾位，括號裡寫數字表示取到第幾位;.要注意toFixed()算出來是字串。
 });
 ```
 
@@ -1131,7 +1278,7 @@ result
           station.ar.includes("中山北路") && station.available_rent_bikes > 10
         );
       })
-      //第一種練習的第三種寫法在下面第850-854行
+      //第一種練習的第三種寫法在下面練習二的try裡的第4到第10行
       .forEach((station) => {
         console.log(station.sna);
       });
@@ -1735,3 +1882,5 @@ var person = {
 
 person.sayHi();
 ```
+
+<!-- JavaScript FOLDER : 0504.js 完成 -->
