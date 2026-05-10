@@ -731,7 +731,7 @@ ul.insertAdjacentHTML("afterbegin", li);
 // 建議用 insertAdjacentHTML
 ```
 
-![指定位置](image/beforebegin.png)
+![指定位置](./image/beforebegin.png)
 
 ### Event Flow 事件流程
 
@@ -741,7 +741,7 @@ ul.insertAdjacentHTML("afterbegin", li);
 - 冒泡階段 (Bubbling Phase)
 ```
 
-![](./image/event_flow.png)
+![事件流程圖](./image/event_flow.png)
 
 ### DOM 和 addEventListener() 監聽器 練習題
 
