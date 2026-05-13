@@ -637,6 +637,8 @@ hello.appendChild(h);
 // 在hello(也就是最前面抓的id叫hello的容器)裡面的最後面加入h(也就是h1)
 ```
 
+![innerHTML](./image/innerHTML.png)
+
 示範 remove() / removeChild()：
 
 ![remove-html](./image/remove-html.png)
@@ -739,6 +741,8 @@ ul.insertAdjacentHTML("afterbegin", li);
 - 捕獲階段 (Capture Phase)
 - 目標階段 (Target Phase)
 - 冒泡階段 (Bubbling Phase)
+
+currentTarget：事件在哪發生的
 ```
 
 ![事件流程圖](./image/event_flow.png)
@@ -1247,7 +1251,43 @@ p1.then((x) => {
 - 微任務佇列 (Microtask Queue)
 - 宏任務佇列 (Macrotask Queue)
 
-![](./image/call_stack.png)
+![stack](./image/call_stack.png)
+
+## jQuery
+
+### 安裝 jQuery
+
+⬇️ https://jquery.com/download/
+
+![](./image/jQuery-prepare1.png)
+
+⬇️ https://cdnjs.com/libraries/jquery
+
+![](./image/jQuery-prepare2.png)
+
+![](./image/jQuery-prepare3.png)
+
+![](./image/jQuery-prepare4.png)
+
+### jQuery 的基本用法
+
+![](./image/jQuery-1.png)
+
+![](./image/jQuery-2.png)
+
+### jQuery.ajax()：
+
+先去 placeholder 找一個假API來練習
+
+placeholder 網址：https://jsonplaceholder.typicode.com/
+
+找 post 這個假 API：https://jsonplaceholder.typicode.com/posts
+
+再去 jQuery 搜 ajax：
+
+![](./image/jQuery-ajax-1.png)
+
+TODO ajax才剛開始
 
 ## YouBike練習題
 
