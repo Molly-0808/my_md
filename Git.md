@@ -1,14 +1,38 @@
-# 前端應用工程師 技術筆記
+# Git 技術筆記
 
-- [git語法](#git語法)
-  - [git config](#git-config)：查詢或設定 Git 運作參數的指令
-  - [git init](#git-init)：讓 Git 開始追蹤紀錄
-  - [git add](#git-add)：將檔案加入暫存區-Working Directory To Staging Area
-  - [git commit](#git-commit)：將檔案加入儲存庫-Staging Area To Repository
-  - [查看紀錄相關指令](#查看紀錄相關指令)：
-  - [git ]()：
-  - [git ]()：
-  - [git ]()：
+- [Git 技術筆記](#git-技術筆記)
+  - [git config](#git-config)
+  - [git init](#git-init)
+    - [如何建立 .git 資料夾](#如何建立-git-資料夾)
+    - [如何取消 git init](#如何取消-git-init)
+  - [git add](#git-add)
+    - [如何 git add](#如何-git-add)
+    - [如何取消 git add](#如何取消-git-add)
+  - [git commit](#git-commit)
+  - [查看紀錄相關指令](#查看紀錄相關指令)
+    - [git status](#git-status)
+    - [git blame](#git-blame)
+    - [git log](#git-log)
+    - [用 git config 設定指令別名(縮寫)](#用-git-config-設定指令別名縮寫)
+- [MK語法](#mk語法)
+  - [Markdown All in One 可用命令](#markdown-all-in-one-可用命令)
+  - [標題](#標題)
+  - [文字格式](#文字格式)
+  - [清單](#清單)
+  - [連結和圖片](#連結和圖片)
+  - [任務](#任務)
+  - [程式碼區塊](#程式碼區塊)
+  - [引言](#引言)
+  - [表格](#表格)
+  - [分隔線](#分隔線)
+  - [換行](#換行)
+  - [好用的字元](#好用的字元)
+- [VSCODE](#vscode)
+  - [THEME](#theme)
+  - [Font](#font)
+  - [ICON](#icon)
+  - [tokenColorCustomizations](#tokencolorcustomizations)
+  - [快捷鍵](#快捷鍵)
 
 ## git config
 
@@ -23,6 +47,8 @@
 > 因為有傳遞 --global參數，只需操作一次
 
 > $代表要在 PowerShell 裡面執行，不須寫入指令
+
+返回[Git 技術筆記](#git-技術筆記)
 
 ## git init
 
@@ -50,6 +76,8 @@
 - 手動刪除
   - 開啟 VS Code 檔案總管，直接刪除 .git 資料夾
 
+返回[Git 技術筆記](#git-技術筆記)
+
 ## git add
 
 ### 如何 git add
@@ -72,6 +100,8 @@
 
 - 清空暫存區：$`git restore --staged .`
 
+返回[Git 技術筆記](#git-技術筆記)
+
 ## git commit
 
 - 儲存檔案：$`git commit -m "第一次commit"`
@@ -83,6 +113,8 @@
 > 如果已經commit過，需要修改檔案，只要重新add再commit就好
 
 - 跳過暫存區直接commit：$`git commit -a -m "跳過暫存區直接儲存囉"`
+
+返回[Git 技術筆記](#git-技術筆記)
 
 ## 查看紀錄相關指令
 
@@ -124,9 +156,11 @@
 - ：$`git config --global alias.別名al "原指令log --oneline --author"`
   - 縮寫變：$`git al`
 
+返回[Git 技術筆記](#git-技術筆記)
+
 # MK語法
 
-- [前端應用工程師 技術筆記](#前端應用工程師-技術筆記)
+- [Git 技術筆記](#git-技術筆記)
   - [git config](#git-config)
   - [git init](#git-init)
     - [如何建立 .git 資料夾](#如何建立-git-資料夾)

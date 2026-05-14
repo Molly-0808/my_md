@@ -1,4 +1,49 @@
-## for迴圈
+# JavaScript 技術筆記
+
+- [JavaScript 技術筆記](#javascript-技術筆記)
+  - [for 迴圈](#for-迴圈)
+  - [補字 if...else if... / .padStart(總長度, "想補的字")](#補字-ifelse-if--padstart總長度-想補的字)
+  - ["想印的字".repeat()](#想印的字repeat)
+  - [function 函式](#function-函式)
+  - [Array 陣列](#array-陣列)
+    - [unshift / push / shift / pop](#unshift--push--shift--pop)
+    - [splice()](#splice)
+    - [concat](#concat)
+  - [forEach / filter / map / reduce / every / some 陣列高階函式](#foreach--filter--map--reduce--every--some-陣列高階函式)
+    - [filter / map / reduce 綜合練習](#filter--map--reduce-綜合練習)
+  - [物件](#物件)
+  - [DOM：querySelector等多種方法](#domqueryselector等多種方法)
+    - [更多DOM操作：](#更多dom操作)
+      - [createElement() / textContent / appendChild()：](#createelement--textcontent--appendchild)
+      - [remove() / removeChild()：](#remove--removechild)
+      - [parentElement / children：](#parentelement--children)
+      - [previousElementSibling / nextElementSibling：](#previouselementsibling--nextelementsibling)
+      - [insertAdjacentElement("", ) / insertAdjacentHTML("", )：](#insertadjacentelement---insertadjacenthtml-)
+    - [Event Flow 事件流程](#event-flow-事件流程)
+    - [DOM 和 addEventListener() 監聽器 練習題](#dom-和-addeventlistener-監聽器-練習題)
+  - [ES6](#es6)
+    - [「...」其餘參數](#其餘參數)
+  - [setTimeout() / setInterval()](#settimeout--setinterval)
+  - [抓取網路資料](#抓取網路資料)
+    - [XMLHttpRequest()](#xmlhttprequest)
+    - [fetch \& then](#fetch--then)
+    - [new Promise / then \& catch / resolve \& reject](#new-promise--then--catch--resolve--reject)
+    - [aynsc \& await / try \& catch](#aynsc--await--try--catch)
+    - [Event Loop 事件循環](#event-loop-事件循環)
+  - [jQuery](#jquery)
+    - [安裝 jQuery](#安裝-jquery)
+    - [jQuery 的基本用法](#jquery-的基本用法)
+    - [jQuery.ajax()：](#jqueryajax)
+  - [YouBike練習題](#youbike練習題)
+  - [module / export \& import](#module--export--import)
+  - [npm / package.json](#npm--packagejson)
+  - [axios](#axios)
+  - [dayjs](#dayjs)
+  - [Block Scope / function scope / lexical scope / closure / IIFE](#block-scope--function-scope--lexical-scope--closure--iife)
+  - [**proto** / prototype / 原型打造 / 語法糖衣](#proto--prototype--原型打造--語法糖衣)
+  - [this](#this)
+
+## for 迴圈
 
 ```js
 // for 迴圈 印0到9的奇數
@@ -97,6 +142,8 @@ for (i = 1; i <= 9; i++) {
 }
 ```
 
+返回[JavaScript 技術筆記](#javascript-技術筆記)
+
 ## 補字 if...else if... / .padStart(總長度, "想補的字")
 
 ```js
@@ -128,6 +175,8 @@ let n = 3;
 let result = String(n).padStart(3, "0");
 console.log(result);
 ```
+
+返回[JavaScript 技術筆記](#javascript-技術筆記)
 
 ## "想印的字".repeat()
 
@@ -176,6 +225,8 @@ for (let i = 0; i < 5; i += 1) {
   console.log(" ".repeat(spaces) + "*".repeat(stars));
 }
 ```
+
+返回[JavaScript 技術筆記](#javascript-技術筆記)
 
 ## function 函式
 
@@ -353,6 +404,8 @@ console.log(isLeapYear(2020))
 console.log(isLeapYear(2021))
 ```
 
+返回[JavaScript 技術筆記](#javascript-技術筆記)
+
 ## Array 陣列
 
 ```js
@@ -400,6 +453,8 @@ for (let i = 0; i < arr.length; i++) {
 ### concat
 
 ![把陣列組合起來](./image/concat.png)
+
+返回[JavaScript 技術筆記](#javascript-技術筆記)
 
 ## forEach / filter / map / reduce / every / some 陣列高階函式
 
@@ -572,6 +627,8 @@ let [h1, h2] = heroes;
 console.log(h1, h2);
 ```
 
+返回[JavaScript 技術筆記](#javascript-技術筆記)
+
 ## 物件
 
 ```js
@@ -609,9 +666,9 @@ document.querySelectorAll();
 
 ![DOM](./image/DOM.png)
 
-### 更多DOM操作： createElement() / textContent / appendChild() / remove() / removeChild() / parentElement / children / previousElementSibling / nextElementSibling / insertAdjacentElement("", ) / insertAdjacentHTML("", )
+### 更多DOM操作：
 
-示範 createElement() / textContent / appendChild()：
+#### createElement() / textContent / appendChild()：
 
 ```js
 const hello = document.querySelector("#hello");
@@ -639,7 +696,7 @@ hello.appendChild(h);
 
 ![innerHTML](./image/innerHTML.png)
 
-示範 remove() / removeChild()：
+#### remove() / removeChild()：
 
 ![remove-html](./image/remove-html.png)
 
@@ -659,7 +716,7 @@ btn.addEventListener("click", () => {
 });
 ```
 
-示範：parentElement / children：
+#### parentElement / children：
 
 ```js
 // 用 parentElement() 取得上層元素
@@ -689,7 +746,7 @@ console.log(ul.childNodes)
 // 建議用 children
 ```
 
-示範：previousElementSibling / nextElementSibling：
+#### previousElementSibling / nextElementSibling：
 
 ```js
 // 用 previousElementSibling / nextElementSibling 取得兄弟姐妹元素
@@ -710,7 +767,7 @@ console.log(li.previousSibling);
 console.log(li.nextSibling);
 ```
 
-示範：insertAdjacentElement("", ) / insertAdjacentHTML("", )：
+#### insertAdjacentElement("", ) / insertAdjacentHTML("", )：
 
 ```js
 // 用 insertAdjacentElement("位置", 變數或常數名稱) 在指定位置安插元素物件
@@ -862,6 +919,8 @@ link.addEventListener("click", function (e) {
 
 ```
 
+返回[JavaScript 技術筆記](#javascript-技術筆記)
+
 ## ES6
 
 ```js
@@ -989,6 +1048,8 @@ aa.addEventListener("click", h);
 bb.addEventListener("click", h);
 ```
 
+返回[JavaScript 技術筆記](#javascript-技術筆記)
+
 ## setTimeout() / setInterval()
 
 ```js
@@ -1034,6 +1095,8 @@ setTimeout(() => {
 }, 1000);
 console.log(3);
 ```
+
+返回[JavaScript 技術筆記](#javascript-技術筆記)
 
 ## 抓取網路資料
 
@@ -1253,6 +1316,8 @@ p1.then((x) => {
 
 ![stack](./image/call_stack.png)
 
+返回[JavaScript 技術筆記](#javascript-技術筆記)
+
 ## jQuery
 
 ### 安裝 jQuery
@@ -1287,7 +1352,27 @@ placeholder 網址：https://jsonplaceholder.typicode.com/
 
 ![](./image/jQuery-ajax-1.png)
 
-TODO ajax才剛開始
+```js
+// 語法
+$.ajax({
+  url: "test.html",
+  context: document.body,
+}).done(function () {
+  $(this).addClass("done");
+});
+```
+
+```js
+// 示範
+const url = "https://jsonplaceholder.typicode.com/posts";
+$.ajax({ url }).done((posts) => {
+  posts.forEach((post) => {
+    console.log(post.title);
+  });
+});
+```
+
+返回[JavaScript 技術筆記](#javascript-技術筆記)
 
 ## YouBike練習題
 
@@ -1361,6 +1446,8 @@ a.forEach((i) => {
 });
 ```
 
+返回[JavaScript 技術筆記](#javascript-技術筆記)
+
 ## module / export & import
 
 如果同個HTML需要匯入多個JS但順序很複雜怎麼辦?
@@ -1408,6 +1495,8 @@ console.log(hh); 就不會重複兩個hi了
 import cc from "./lib.js";
 ```
 
+返回[JavaScript 技術筆記](#javascript-技術筆記)
+
 ## npm / package.json
 
 建立package.json
@@ -1442,6 +1531,8 @@ import cc from "./lib.js";
 
 npm run dev
 ![npm run dev](./image/11.jpg)
+
+返回[JavaScript 技術筆記](#javascript-技術筆記)
 
 ## axios
 
@@ -1499,6 +1590,8 @@ try {
 }
 ```
 
+返回[JavaScript 技術筆記](#javascript-技術筆記)
+
 ## dayjs
 
 ```html
@@ -1539,6 +1632,8 @@ function setMonthValue() {
   currentMonth.value = thisMonth.format("YYYY/M");
 }
 ```
+
+返回[JavaScript 技術筆記](#javascript-技術筆記)
 
 ## Block Scope / function scope / lexical scope / closure / IIFE
 
@@ -1615,6 +1710,8 @@ for (var i = 0; i < 3; i++) {
   console.log(x);
 })(123);
 ```
+
+返回[JavaScript 技術筆記](#javascript-技術筆記)
 
 ## **proto** / prototype / 原型打造 / 語法糖衣
 
@@ -1761,6 +1858,8 @@ console.log(a); // 印出2
 外面的var a = 1被改成2了，所以最後印出2。
 ————————————————————————————————————————————
 ```
+
+返回[JavaScript 技術筆記](#javascript-技術筆記)
 
 ## this
 
