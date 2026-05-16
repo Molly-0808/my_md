@@ -35,6 +35,11 @@
     - [jQuery 的基本用法](#jquery-的基本用法)
     - [jQuery.ajax()：](#jqueryajax)
   - [YouBike練習題](#youbike練習題)
+    - [一般寫法](#一般寫法)
+    - [用 jQuery 寫法改寫](#用-jquery-寫法改寫)
+      - [Postman](#postman)
+      - [Font Awesome](#font-awesome)
+    - [課堂實作練習fetch和await(非 jQuery)](#課堂實作練習fetch和await非-jquery)
   - [module / export \& import](#module--export--import)
   - [npm / package.json](#npm--packagejson)
   - [axios](#axios)
@@ -887,7 +892,7 @@ minus.addEventListener("click", () => {
 ```
 
 ```js
-// 製作BMI計算器
+// 製作BMI計算機
 ————————————————————————————————————————————
 const btn = document.querySelector("#btn");
 const bmi = document.querySelector("#bmi");
@@ -1322,23 +1327,29 @@ p1.then((x) => {
 
 ### 安裝 jQuery
 
+可以下載壓縮版：
+
+![壓縮版jQuery](./image/jQuery-prepare0.png)
+
+也可以選擇直接用CDN就好：
+
 ⬇️ https://jquery.com/download/
 
-![](./image/jQuery-prepare1.png)
+![jQuery CDNJS](./image/jQuery-prepare1.png)
 
 ⬇️ https://cdnjs.com/libraries/jquery
 
-![](./image/jQuery-prepare2.png)
+![jQuery CDNJS](./image/jQuery-prepare2.png)
 
-![](./image/jQuery-prepare3.png)
+![去HTML貼上](./image/jQuery-prepare3.png)
 
-![](./image/jQuery-prepare4.png)
+![測試有沒有成功](./image/jQuery-prepare4.png)
 
 ### jQuery 的基本用法
 
-![](./image/jQuery-1.png)
+![用法示範](./image/jQuery-1.png)
 
-![](./image/jQuery-2.png)
+![用法示範](./image/jQuery-2.png)
 
 ### jQuery.ajax()：
 
@@ -1350,7 +1361,7 @@ placeholder 網址：https://jsonplaceholder.typicode.com/
 
 再去 jQuery 搜 ajax：
 
-![](./image/jQuery-ajax-1.png)
+![ajax](./image/jQuery-ajax-1.png)
 
 ```js
 // 語法
@@ -1376,8 +1387,143 @@ $.ajax({ url }).done((posts) => {
 
 ## YouBike練習題
 
+### 一般寫法
+
+HTML 在 JS101-main 資料夾：
+
+https://github.com/5xTraining/JS101/blob/07-BMI%E8%A8%88%E7%AE%97%E6%A9%9F/07-BMI%E8%A8%88%E7%AE%97%E6%A9%9F/app.js
+
+找到YouBike2.0即時資訊的 API 介接網址(JSON資料)：
+https://tcgbusfs.blob.core.windows.net/dotapp/youbike/v2/youbike_immediate.json
+
 ```js
-// YouBike練習一 then...catch (Promise 鏈結)
+document.addEventListener("DOMContentLoaded", () => {
+  const api =
+    "https://tcgbusfs.blob.core.windows.net/dotapp/youbike/v2/youbike_immediate.json";
+
+  const keyword = document.querySelector("#searchKeyword");
+  const form = document.querySelector("#searchForm");
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const query = keyword.value.trim();
+
+    if (query != "") {
+      fetch(api)
+        .then((response) => {
+          return response.json();
+        })
+        .then((sites) => {
+          const siteList = document.querySelector(".siteList");
+          siteList.innerHTML = "";
+
+          sites
+            .filter((site) => {
+              return site.ar.includes(query);
+            })
+            .forEach((site) => {
+              const item = `<li class="list-group-item fs-5">
+              <i class="fas fa-bicycle"></i>
+              ${site.sna.replace("YouBike2.0_", "")} (${site.sbi})<br>
+              <small class="text-muted">
+              ${site.ar}</small>
+              </li>`;
+
+              siteList.insertAdjacentHTML("beforeend", item);
+            });
+        });
+    }
+  });
+});
+```
+
+最終效果：
+
+![八德路](./image/八德路影片示範效果.png)
+
+### 用 jQuery 寫法改寫
+
+首先要引入 jQuery 的 CDNJS [教學在上面](#安裝-jquery)
+
+找到YouBike2.0即時資訊的 API 介接網址(JSON資料)：
+https://tcgbusfs.blob.core.windows.net/dotapp/youbike/v2/youbike_immediate.json
+
+#### Postman
+
+可利用 Postman 解析這個 API：
+
+在 GET 後方輸入框貼上 API 網址再送出就可以得到整理過的資料了
+
+Postman 會幫忙自動排版以及抓取當下最新更新的資料
+
+#### Font Awesome
+
+可引入 Font Awesome 使用各種 icon
+
+1. 開啟 cdnjs 官方網站。https://cdnjs.com/
+
+2. 在網頁上方的搜尋框輸入：font-awesome。
+
+3. 點選進入 font-awesome 的專屬頁面。https://cdnjs.com/libraries/font-awesome
+
+4. 選擇版本：在頁面頂端的版本下拉選單中切換至 6.7.2。
+
+5. 找到列在第一個或名為 css/all.min.css 的檔案。點擊<> 圖示自動複製程式碼。
+
+6. 貼過去HTML的head裡。
+
+```js
+// jQuery 版本
+
+// 用 ready 代替 ...DOMContentLoaded...
+
+$().ready(() => {
+  const api =
+    "https://tcgbusfs.blob.core.windows.net/dotapp/youbike/v2/youbike_immediate.json";
+
+  // 用 $() 代替 ...document.querySelector...
+  const keyword = $("#searchKeyword");
+  const form = $("#searchForm");
+
+  // 用 form.submit() 代替 form.addEventListener...
+  form.submit((e) => {
+    e.preventDefault();
+
+    // 因為上面用 $() 代替 ...document.querySelector...，代表這個已經不是透過querySelector抓回來的元素，它現在是jQuery的東西，不能再用.value.trim()，要改用.val()，而且不必寫.trim()。
+    const query = keyword.val();
+    // 用 ajax 寫法代替 fetch 寫法
+    if (query != "") {
+      $.ajax({ url: api }).done((sites) => {
+        // 用 $() 代替 document.querySelector()
+        const siteList = document.querySelector(".siteList");
+        // 用 html("") 代替 innerHTML = ""
+        siteList.html("");
+
+        sites
+          .filter((site) => {
+            return site.ar.includes(query);
+          })
+          .forEach((site) => {
+            const item = `<li class="list-group-item fs-5">
+            <i class="fas fa-bicycle"></i>
+            ${site.sna.replace("YouBike2.0_", "")} (${site.sbi})<br>
+            <small class="text-muted">
+            ${site.ar}</small>
+            </li>`;
+            // 用 append 代替 insertAdjacentHTML("beforeend", item);
+            siteList.append(item);
+          });
+      });
+    }
+  });
+});
+```
+
+### 課堂實作練習fetch和await(非 jQuery)
+
+```js
+// YouBike練習一 fetch & then & catch
 
 const url =
   "https://tcgbusfs.blob.core.windows.net/dotapp/youbike/v2/youbike_immediate.json";
@@ -1414,7 +1560,7 @@ result
 ```
 
 ```js
-// YouBike練習二 try...catch (搭配 async/await)
+// YouBike練習二 try & catch (搭配 async/await)
 
 const url =
   "https://tcgbusfs.blob.core.windows.net/dotapp/youbike/v2/youbike_immediate.json";
@@ -1450,10 +1596,10 @@ a.forEach((i) => {
 
 ## module / export & import
 
-如果同個HTML需要匯入多個JS但順序很複雜怎麼辦?
+如果同個HTML需要引入多個JS但順序很複雜怎麼辦?
 
-同時想匯入lib.js和app.js
-HTML只需要匯入app.js
+同時想引入lib.js和app.js
+HTML只需要引入app.js
 
 ```html
 index.html裡：
@@ -1475,7 +1621,7 @@ export { hi, hey };
 export default hey;
 ————————————————————————————————————————————
 app.js裡：
-// import 匯入 lib.js
+// import 引入 lib.js
 import { hi, hey } from "./libs";
 
 如果老闆在這裡寫了
@@ -1484,14 +1630,14 @@ function hi() {
 }
 跟我在lib.js的hi重名了怎麼辦?
 {}裡面的東西可以用as取一個別名，避免和下面取一樣的名字的東西重複。
-匯入hi同時給它一個綽號hh。
+引入hi同時給它一個綽號hh。
 import { hi as hh, hey } from "./lib.js";
 
 console.log(hi);
 console.log(hh); 就不會重複兩個hi了
 ----------------------------------
-// 下方這種沒有{}的會找default預設好的來匯入(也就是896行的hey)
-// cc可以改別的名字，不管寫cc還是什麼，都會匯入預設好的hey
+// 下方這種沒有{}的會找default預設好的來引入(也就是896行的hey)
+// cc可以改別的名字，不管寫cc還是什麼，都會引入預設好的hey
 import cc from "./lib.js";
 ```
 
@@ -2021,5 +2167,7 @@ var person = {
 
 person.sayHi();
 ```
+
+返回[JavaScript 技術筆記](#javascript-技術筆記)
 
 <!-- JavaScript FOLDER : 0504.js 完成 -->
