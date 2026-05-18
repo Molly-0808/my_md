@@ -29,6 +29,7 @@
     - [fetch \& then](#fetch--then)
     - [new Promise / then \& catch / resolve \& reject](#new-promise--then--catch--resolve--reject)
     - [aynsc \& await / try \& catch](#aynsc--await--try--catch)
+    - [CORS 錯誤](#cors-錯誤)
     - [Event Loop 事件循環](#event-loop-事件循環)
   - [jQuery](#jquery)
     - [安裝 jQuery](#安裝-jquery)
@@ -47,46 +48,50 @@
   - [Block Scope / function scope / lexical scope / closure / IIFE](#block-scope--function-scope--lexical-scope--closure--iife)
   - [**proto** / prototype / 原型打造 / 語法糖衣](#proto--prototype--原型打造--語法糖衣)
   - [this](#this)
+  - [初階 TODO 列表製作](#初階-todo-列表製作)
+  - [製作 TODO APP](#製作-todo-app)
 
 ## for 迴圈
 
 ```js
 // for 迴圈 印0到9的奇數
-結果 1 3 5 7 9
-————————————————————————————————————————————
+
 for (let i = 0; i < 10; i += 1) {
   if (i % 2 == 0) {
     console.log(i + 1);
   }
 }
+————————————————————————————————————————————
+結果 1 3 5 7 9
 ```
 
 ```js
 // for 迴圈 印出0到100的總和
-結果 5050
-————————————————————————————————————————————
+
 let total = 0;
 for (let i = 0; i <= 100; i += 1) {
   total += i; // 就是total = total + i
 }
 console.log(total);
+————————————————————————————————————————————
+結果 5050
 ```
 
 ```js
 // for 迴圈 印出2到100的偶數的總和
-結果 2550
-————————————————————————————————————————————
+
 let total = 0;
 for (let i = 2; i <= 100; i += 2) {
   total += i; // 就是total = total + i
 }
 console.log(total);
+————————————————————————————————————————————
+結果 2550
 ```
 
 ```js
 // for 迴圈 印出1到100的偶數的總和
-結果 2550
-————————————————————————————————————————————
+
 let total = 0;
 for (let i = 1; i <= 100; i += 1) {
   if (i % 2 == 0) {
@@ -94,23 +99,34 @@ for (let i = 1; i <= 100; i += 1) {
   }
 }
 console.log(total);
+————————————————————————————————————————————
+結果 2550
 ```
 
 ```js
 // while 迴圈 印出1到9
-結果 1 2 3 4 5 6 7 8 9
 
-console.log(i) 和 i += 1 調換順序會變成2 3 ...9 10
-————————————————————————————————————————————
 let i = 1;
 while (i < 10) {
   console.log(i); // 先印出目前的數字
   i += 1; // 再把 i 加 1
 }
+————————————————————————————————————————————
+結果 1 2 3 4 5 6 7 8 9
+console.log(i) 和 i += 1 調換順序會變成2 3 ...9 10
 ```
 
 ```js
 // 巢狀迴圈 印出三行田字且每行要有十個田字
+
+for (let j = 0; j < 3; j += 1) {
+  let text = "";
+  for (let i = 0; i < 10; i += 1) {
+    text += "田";
+  }
+  console.log(text);
+}
+————————————————————————————————————————————
 結果
 田田田田田田田田田田
 田田田田田田田田田田
@@ -119,18 +135,17 @@ while (i < 10) {
 外層迴圈 j 控制列數Row。
 每一行開始前先準備一個空的字串text，用來收集這一行要印的「田」。
 內層迴圈 i 控制每行的內容Column。
-————————————————————————————————————————————
-for (let j = 0; j < 3; j += 1) {
-  let text = "";
-  for (let i = 0; i < 10; i += 1) {
-    text += "田";
-  }
-  console.log(text);
-}
 ```
 
 ```js
 // 巢狀迴圈 印出九九乘法表
+
+for (i = 1; i <= 9; i++) {
+  for (j = 1; j <= 9; j++) {
+    console.log(`${i} * ${j} = ${i * j}`);
+  }
+}
+————————————————————————————————————————————
 結果
 被乘數 * 乘數 = 計算結果
 1 * 1 = 1 ~ 1 * 9 = 9
@@ -139,12 +154,6 @@ for (let j = 0; j < 3; j += 1) {
 9 * 1 = 9 ~ 9 * 9 = 81
 
 外層迴圈 i 是被乘數; 內層迴圈 j 是乘數。
-————————————————————————————————————————————
-for (i = 1; i <= 9; i++) {
-  for (j = 1; j <= 9; j++) {
-    console.log(`${i} * ${j} = ${i * j}`);
-  }
-}
 ```
 
 返回[JavaScript 技術筆記](#javascript-技術筆記)
@@ -153,12 +162,7 @@ for (i = 1; i <= 9; i++) {
 
 ```js
 // if...else if...else... 數字補零
-結果 003 因為88行n是3
 
-個位數 n < 10
-十位數 n < 100
-百位數以上 else
-————————————————————————————————————————————
 let n = 3;
 if (n < 10) {
   console.log("00" + n);
@@ -167,18 +171,25 @@ if (n < 10) {
 } else {
   console.log(n);
 }
+————————————————————————————————————————————
+結果 003 因為88行n是3
+
+個位數 n < 10
+十位數 n < 100
+百位數以上 else
 ```
 
 ```js
 // 用ES8語法 .padStart(總長度, "想補的字") 數字補零
+
+let n = 3;
+let result = String(n).padStart(3, "0");
+console.log(result);
+————————————————————————————————————————————
 結果 003 因為99行n是3
 
 先用 String() 把數字 3 轉換成字串 "3"，
 再用 .padStart(3, "0") 第一個參數 3 代表目標總長度。
-————————————————————————————————————————————
-let n = 3;
-let result = String(n).padStart(3, "0");
-console.log(result);
 ```
 
 返回[JavaScript 技術筆記](#javascript-技術筆記)
@@ -187,48 +198,51 @@ console.log(result);
 
 ```js
 // 用 "想印的字".repeat(i) 印出對齊左側的聖誕樹
+
+for (let i = 1; i <= 5; i += 1) {
+  console.log("*".repeat(i));
+}
+————————————————————————————————————————————
 結果
 *
 **
 ***
 ****
 *****
-————————————————————————————————————————————
-for (let i = 1; i <= 5; i += 1) {
-  console.log("*".repeat(i));
-}
 ```
 
 ```js
 // 用 "想印的字".repeat(i) 印出對齊左側的「奇數」聖誕樹
+
+for (let i = 1; i <= 9; i += 1) {
+  if (i % 2 != 0) {
+    console.log("*".repeat(i));
+  }
+}
+————————————————————————————————————————————
 結果
 *
 ***
 *****
 *******
 *********
-————————————————————————————————————————————
-for (let i = 1; i <= 9; i += 1) {
-  if (i % 2 != 0) {
-    console.log("*".repeat(i));
-  }
-}
 ```
 
 ```js
 // 用 "想印的字".repeat(i) 印出完整的聖誕樹
+
+for (let i = 0; i < 5; i += 1) {
+  let spaces = 4 - i;
+  let stars = i * 2 + 1;
+  console.log(" ".repeat(spaces) + "*".repeat(stars));
+}
+————————————————————————————————————————————
 結果
     *         4 空格 + 1 星
    ***        3 空格 + 3 星
   *****       2 空格 + 5 星
  *******      1 空格 + 7 星
 *********     0 空格 + 9 星
-————————————————————————————————————————————
-for (let i = 0; i < 5; i += 1) {
-  let spaces = 4 - i;
-  let stars = i * 2 + 1;
-  console.log(" ".repeat(spaces) + "*".repeat(stars));
-}
 ```
 
 返回[JavaScript 技術筆記](#javascript-技術筆記)
@@ -237,136 +251,149 @@ for (let i = 0; i < 5; i += 1) {
 
 ```js
 // 函式基本定義及呼叫方式
-結果 Hello
-————————————————————————————————————————————
+
 function sayhi() {
   console.log("Hello");
 }
 sayhi(); //呼叫函式
+————————————————————————————————————————————
+結果 Hello
 ```
 
 ```js
 // 函式中的參數的用法
-結果 HelloMolly
-————————————————————————————————————————————
+
 function sayhi(someone) {
   console.log("Hello" + someone);
 }
 sayhi("Molly");
+————————————————————————————————————————————
+結果 HelloMolly
 ```
 
 ```js
 // 匿名函式表達式
-結果 HelloMolly
-————————————————————————————————————————————
+
 const sayhi = function (someone) {
   console.log("Hello" + someone);
 };
 sayhi("Molly");
+————————————————————————————————————————————
+結果 HelloMolly
 ```
 
 ```js
 // 箭頭函式
-結果 HelloMolly
-————————————————————————————————————————————
+
 const sayhi = (someone) => {
   console.log("Hello" + someone);
 };
 sayhi("Molly");
+————————————————————————————————————————————
+結果 HelloMolly
 
 如果只有一個參數，小括號可以省略
 const sayhi = someone => { ... };
 
-如果內容只有一行，大括號和 console.log 也可以更精簡
-如果是回傳值甚至不用寫 return
+如果內容只有一行，大括號可以省略不寫
 const sayhi = someone => console.log("Hello" + someone);
+
+如果是回傳值甚至不用寫 return
 ```
 
 ```js
 // 加法函式
-結果 3
 
-多個參數a, b 可以放更多，記得用逗號隔開。
-————————————————————————————————————————————
 function add(a, b) {
   console.log(a + b);
 }
 add(1, 2);
+————————————————————————————————————————————
+結果 3
+
+多個參數a, b 可以放更多，記得用逗號隔開。
 ```
 
 ```js
 // 計算BMI
-結果 23.4375
 
 BMI = Body Mass Index
 公式 = 體重 / (身高公尺²)
-calc 是 calculate 計算 的縮寫
-————————————————————————————————————————————
+
 function calcBMI(h, w) {
   console.log(w / ((h / 100) * (h / 100)));
 }
 calcBMI(160, 60);
+————————————————————————————————————————————
+結果 23.4375
 ```
 
 ```js
 // 預設參數
-結果 10 20 100
 
-如果在呼叫函式時沒有給 c 數值， c 就會自動採用預設好的 100。
-————————————————————————————————————————————
 function dog(a, b, c = 100) {
   console.log(a, b, c);
 }
 dog(10, 20);
+————————————————————————————————————————————
+結果 10 20 100
+
+如果在呼叫函式時沒有給 c 數值， c 就會自動採用預設好的 100。
 ```
 
 ```js
 // 回傳值 Return Value
-結果 3
 
-一旦執行到 return，函式就會立刻結束。
-————————————————————————————————————————————
 function add(a, b) {
   return a + b;
 }
 const result = add(1, 2);
 console.log(result);
+————————————————————————————————————————————
+結果 3
 ```
 
 ```js
 // 用「放大、四捨五入、再縮小」來處理小數點位數
 
-Math.round()用來將數字四捨五入到最接近的整數。
-————————————————————————————————————————————
 function myRound(a, b = 0) {
   const s = 10 ** b; // **是平方, b是多少平方
   const j = Math.round(a * s) / s;
 
   return j;
 }
-console.log(myRound(3.14159, 2)); // 3.14
-console.log(myRound(3.14159, 3)); // 3.142 因為第四位是5，Math.round會進位
-console.log(myRound(3.14159)); // 3
+console.log(myRound(3.14159, 2));
+console.log(myRound(3.14159, 3));
+console.log(myRound(3.14159));
+————————————————————————————————————————————
+結果
+3.14
+3.142 因為第四位是5，Math.round會進位
+3
+
+Math.round()用來將數字四捨五入到最接近的整數。
 ```
 
 ```js
 // 承上題 省略宣告變數j的寫法
-————————————————————————————————————————————
+
 function myRound(a, b = 0) {
   const s = 10 ** b;
   return Math.round(a * s) / s;
 }
-console.log(myRound(3.14159, 2)); // 3.14
-console.log(myRound(3.14159, 3)); // 3.142
-console.log(myRound(3.14159)); // 3
+console.log(myRound(3.14159, 2));
+console.log(myRound(3.14159, 3));
+console.log(myRound(3.14159));
+————————————————————————————————————————————
+結果
+3.14
+3.142
+3
 ```
 
 ```js
 // 示範「函式是一等公民」的特性
-結果 ƒ hey() {}
 
-將 hey 函式本身作為引數傳遞給 hi 函式的參數 a 。
-————————————————————————————————————————————
 function hey() {} //定義了一個空函式
 
 function hi(a) {
@@ -374,12 +401,15 @@ function hi(a) {
 }
 
 hi(hey);
+————————————————————————————————————————————
+結果 ƒ hey() {}
+
+將 hey 函式本身作為引數傳遞給 hi 函式的參數 a 。
 ```
 
 ```js
 // 計算 BMI 並回傳四捨五入到小數點後兩位的數值
-結果 24.22
-————————————————————————————————————————————
+
 function bmiCalculator(height, weight) {
   let h = height / 100
   let bmi = weight / (h * h)
@@ -392,14 +422,13 @@ function bmiCalculator(height, weight) {
 }
 
 console.log(bmiCalculator(170, 70))
+————————————————————————————————————————————
+結果 24.22
 ```
 
 ```js
 // 判斷閏年
-結果
-true
-false
-————————————————————————————————————————————
+
 function isLeapYear(year) {
   return (year % 4 === 0 && year % 100 !== 0)
   || year % 400 === 0
@@ -407,6 +436,10 @@ function isLeapYear(year) {
 
 console.log(isLeapYear(2020))
 console.log(isLeapYear(2021))
+————————————————————————————————————————————
+結果
+true
+false
 ```
 
 返回[JavaScript 技術筆記](#javascript-技術筆記)
@@ -415,27 +448,29 @@ console.log(isLeapYear(2021))
 
 ```js
 // 陣列索引
-結果 y t v v
 
-x...v的陣列索引是0...5。
-x的座位是0，v的座位是5。
-nums.length代表nums陣列的長度，也就是6。
-————————————————————————————————————————————
 const nums = ["x", "y", "z", "t", "u", "v"];
 console.log(nums[1]);
 console.log(nums[3]);
 console.log(nums[5]);
 console.log(nums[nums.length - 1]);
+————————————————————————————————————————————
+結果 y t v v
+
+x...v的陣列索引是0...5。
+x的座位是0，v的座位是5。
+nums.length代表nums陣列的長度，也就是6。
 ```
 
 ```js
 // 遍歷陣列
-結果 a b c d e
-————————————————————————————————————————————
+
 const arr = ["a", "b", "c", "d", "e"];
 for (let i = 0; i < arr.length; i++) {
   console.log(arr[i]);
 }
+————————————————————————————————————————————
+結果 a b c d e
 ```
 
 ### unshift / push / shift / pop
@@ -465,20 +500,20 @@ for (let i = 0; i < arr.length; i++) {
 
 ```js
 // forEach
-結果 a b c d e f
 
-forEach 只是單純執行動作 沒有回傳值（ 即 undefined ）。
-————————————————————————————————————————————
 const arr = ["a", "b", "c", "d", "e", "f"];
 arr.forEach(function (i) {
   console.log(i);
 });
+————————————————————————————————————————————
+結果 a b c d e f
+
+forEach 只是單純執行動作，沒有回傳值（ 即 undefined ）。
 ```
 
 ```js
 // 用 forEach 印出可以被 2 整除的元素
-結果 2 4 6 8 10
-————————————————————————————————————————————
+
 const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 nums.forEach(function (i) {
   if (i % 2 == 0) {
@@ -488,12 +523,13 @@ nums.forEach(function (i) {
 
 用箭頭函式簡寫：
 nums.forEach((i) => {...})
+————————————————————————————————————————————
+結果 2 4 6 8 10
 ```
 
 ```js
 // push 搭配空陣列和forEach
-結果 [2, 4, 6, 8, 10]
-————————————————————————————————————————————
+
 const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const result = [];
 nums.forEach((i) => {
@@ -502,18 +538,15 @@ nums.forEach((i) => {
   }
 });
 console.log(result);
+————————————————————————————————————————————
+結果 [2, 4, 6, 8, 10]
 ```
 
 ![老師的圖](./image/老師的圖.png)
 
 ```js
 // filter
-結果 [2, 4, 6, 8, 10]
 
-filter保持原始資料完整，所以一開始給它陣列，回傳也會是陣列。
-filter做篩選，把錯的過濾掉，滿足條件的才會被留下來。
-0 是 Falsy (假值)，非 0 是 Truthy (真值)。
-————————————————————————————————————————————
 const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const result = nums.filter((el) => {
   if (el % 2 == 0) {
@@ -533,67 +566,76 @@ console.log(result);
 const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const result = nums.filter(el => el % 2 == 0);
 console.log(result);
+————————————————————————————————————————————
+結果 [2, 4, 6, 8, 10]
+
+filter保持原始資料完整，所以一開始給它陣列，回傳也會是陣列。
+filter做篩選，把錯的過濾掉，滿足條件的才會被留下來。
+0 是 Falsy (假值)，非 0 是 Truthy (真值)。
 ```
 
 ```js
 // map
+
+const nums = [1, 2, 3, 4, 5];
+const result = nums.map((el) => {
+  return el * 2;
+});
+console.log(result);
+————————————————————————————————————————————
 結果 [2, 4, 6, 8, 10]
 
 map也會保持原始資料完整，所以一開始給它陣列，回傳也會是陣列。
 map會把東西整理運算後丟入新陣列。
 map的本質是「對應、加工」與filter「過濾」不同，
 所以 map 強制要求「原陣列有幾個，新陣列就有幾個」。
-————————————————————————————————————————————
-const nums = [1, 2, 3, 4, 5];
-const result = nums.map((el) => {
-  return el * 2;
-});
-console.log(result);
 ```
 
 ```js
 // reduce
-結果 15
 
-reduce將整個陣列的元素「歸納」成一個單一的值。
-a 累積值， b 每回合的值， 0 起始值。
-如果沒有起始值，會默認第一個b值為起始值。
-————————————————————————————————————————————
 const nums = [1, 2, 3, 4, 5];
 const result = nums.reduce((a, b) => {
   return a + b;
 }, 0);
 console.log(result);
+————————————————————————————————————————————
+結果 15
+
+reduce將整個陣列的元素「歸納」成一個單一的值。
+a 累積值， b 每回合的值， 0 起始值。
+如果沒有起始值，會默認第一個b值為起始值。
 ```
 
 ![reduce流程圖](./image/reduce.png)
 
 ```js
 // every() 全選才算對
-結果 true
-————————————————————————————————————————————
+
 const scores = [70, 85, 90];
 const allPassed = scores.every(function (score) {
   return score > 60;
 });
 console.log(allPassed);
+————————————————————————————————————————————
+結果 true
 ```
 
 ```js
 // some() 只要一個對就行
-結果 false
-————————————————————————————————————————————
+
 const fruits = ["apple", "banana", "cherry"];
 const hasStrawberry = fruits.some((fruit) => fruit === "strawberry");
 console.log(hasStrawberry);
+————————————————————————————————————————————
+結果 false
 ```
 
 ### filter / map / reduce 綜合練習
 
 ```js
 // 印出 1 ~ 10 之間所有的奇數的平方和
-結果 165
-————————————————————————————————————————————
+
 const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const j = nums.filter((n) => n % 2 != 0); //篩選奇數
 const s = j.map((n) => n * n); //對奇數們平方
@@ -621,15 +663,18 @@ const square = (n) => n * n;
 const add = (acc, n) => acc + n;
 const total = nums.filter(isOdd).map(square).reduce(add);
 console.log(total);
+————————————————————————————————————————————
+結果 165
 ```
 
 ```js
 // 陣列解構
-結果 A B
-————————————————————————————————————————————
+
 const heroes = ["A", "B", "C", "D"];
 let [h1, h2] = heroes;
 console.log(h1, h2);
+————————————————————————————————————————————
+結果 A B
 ```
 
 返回[JavaScript 技術筆記](#javascript-技術筆記)
@@ -637,17 +682,58 @@ console.log(h1, h2);
 ## 物件
 
 ```js
+// 物件解構
+
+const obj = { name: "cc", age: 18, a: 2 }
+
+// const name = obj.name
+// const age = obj.age
+// const a = obj.a
+
+const { a, age, name, x } = obj
+
+console.log(a, age, name, x)
+————————————————————————————————————————————
+結果 2 18 "cc" undefined
+```
+
+```js
+// 練習：
+
+// 先用 forEach 列出每個name
+const a = [
+  { name: "cc", age: 1 },
+  { name: "dd", age: 1 },
+  { name: "ee", age: 1 },
+];
+a.forEach((i) => {
+  console.log(i.name);
+});
+
+// 再用物件解構取代 i.name
+a.forEach(({ name }) => {
+  console.log(name);
+});
+
+// 省略大括號
+a.forEach(({ name }) => console.log(name));
+————————————————————————————————————————————
+結果 cc dd ee
+```
+
+```js
 // 物件
-結果 1
 
 key vs value
 例如下方name就是key， 1 就是 value。
 物件就像是一個「置物櫃」，每個抽屜都有自己的key，
 可以透過a["name"]和a.name這兩種方式打開抽屜：
-————————————————————————————————————————————
+
 const a = { name: 1, age: 2 };
 console.log(a["name"]);
 console.log(a.name);
+————————————————————————————————————————————
+結果 1
 ```
 
 ## DOM：querySelector等多種方法
@@ -844,8 +930,8 @@ html裡：
 ```js
 // 點擊按鈕印出123
 
-若在html的head裡的script後沒有加上延遲defer，就必須寫document.addEventListener("DOMContentLoaded", () => {});這串東西。
-————————————————————————————————————————————
+若在html的head裡的script後沒有加上延遲defer，就必須寫document.addEventListener("DOMContentLoaded", () => {});這串東西：
+
 document.addEventListener("DOMContentLoaded", () => {
   const nums = document.querySelector("#btn");
   nums.addEventListener("click", () => {
@@ -856,7 +942,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 ```js
 // 如果按鈕目前的文字是 "123"就把它改成 "456"，否則就改回"123"
-————————————————————————————————————————————
+
 const nums = document.querySelector("#btn");
 nums.addEventListener("click", () => {
   if (btn.textContent == "123") {
@@ -870,7 +956,7 @@ nums.addEventListener("click", () => {
 
 ```js
 // 製作範圍限制 0 到 5 的計數器
-————————————————————————————————————————————
+
 let nums = document.querySelector("#nums");
 let plus = document.querySelector("#Plus");
 let minus = document.querySelector("#Minus");
@@ -893,7 +979,7 @@ minus.addEventListener("click", () => {
 
 ```js
 // 製作BMI計算機
-————————————————————————————————————————————
+
 const btn = document.querySelector("#btn");
 const bmi = document.querySelector("#bmi");
 const height = document.querySelector("#height");
@@ -913,15 +999,14 @@ btn.addEventListener("click", () => {
 
 ```js
 // 預設不要轉去超連結
-————————————————————————————————————————————
-const link = document.querySelector("#link")
+
+const link = document.querySelector("#link");
 
 // 監聽 click 事件，當發生的時候就...
 link.addEventListener("click", function (e) {
-  e.preventDefault() // 把原本預設的行為停下來
-  console.log("我被按了")
-})
-
+  e.preventDefault(); // 把原本預設的行為停下來
+  console.log("我被按了");
+});
 ```
 
 返回[JavaScript 技術筆記](#javascript-技術筆記)
@@ -952,7 +1037,7 @@ console.log(name, age)
 
 ```js
 // 把陣列組合起來 (和 concat 比較)
-————————————————————————————————————————————
+
 const H1 = ["A", "B", "C"]
 const H2 = ["X", "Y", "Z"]
 
@@ -960,86 +1045,106 @@ const H2 = ["X", "Y", "Z"]
 const HAll = [...H1, ...H2]
 
 console.log(HAll)
+————————————————————————————————————————————
+結果 [ 'A', 'B', 'C', 'X', 'Y', 'Z' ]
+```
+
+```js
+// 收集
+
+function hi(a, b, c, ...others) {
+    console.log(others)
+}
+
+hi(1, 2, 3, 4, 5)
+————————————————————————————————————————————
+結果 [4, 5]
 ```
 
 ```js
 // 其餘參數語法
-結果 "x", "y", ["z", "k"]
 
-「...」的作用是把「剩餘的所有參數」都收集起來，並自動包裝成一個陣列。
-它只能擺在最後面，表示剩下的參數我C全部都要，若擺在其他位置會導致語法錯誤。
-————————————————————————————————————————————
 function hi(a, b, ...c) {
   console.log(a, b, c);
 }
 hi("x", "y", "z", "k");
+————————————————————————————————————————————
+結果 "x", "y", ["z", "k"]
+
+「...」的作用是把「剩餘的所有參數」都收集起來，並自動包裝成一個陣列。
+它只能擺在最後面，表示剩下的參數我C全部都要，若擺在其他位置會導致語法錯誤。
 ```
 
 ```js
 // 「其餘參數」與「展開運算子」同時出現
-結果 1 "a" 2 3 "5" 7
-————————————————————————————————————————————
+
 function myLog(a, b, ...c) {
   console.log(a, b, ...c);
 }
 myLog(1, "a", 2, 3, "5", 7);
+————————————————————————————————————————————
+結果 1 "a" 2 3 "5" 7
 ```
 
 ```js
 // 「其餘參數」與「陣列方法map」
-結果 [2, 4, 6, 9, 11, 1, 0]
-————————————————————————————————————————————
+
 function addOne(...a) {
   return a.map((i) => i + 1);
 }
 const result = addOne(1, 3, 5, 8, 10, 0, -1);
 console.log(result);
+————————————————————————————————————————————
+結果 [2, 4, 6, 9, 11, 1, 0]
 ```
 
 ```js
 // 承上題，用 typeof 進行「資料清洗」
-結果 [2, 4, 6, 9, 11, 1, 0]
 
-使用.filter((i) => typeof i == "number")過濾，
-"a" 的類型是 string，false 的類型是 boolean，兩者都會被剔除。
-————————————————————————————————————————————
 function addOne(...a) {
   return a.filter((i) => typeof i == "number").map((i) => i + 1);
 }
 const result = addOne(1, 3, 5, 8, "a", 10, 0, -1, false);
 console.log(result);
+————————————————————————————————————————————
+結果 [2, 4, 6, 9, 11, 1, 0]
+
+使用.filter((i) => typeof i == "number")過濾，
+"a" 的類型是 string，false 的類型是 boolean，兩者都會被剔除。
 ```
 
 ```js
 // 陣列被當作單一參數傳進函式
-結果 [1, 2, 3, 4, 5] undefined undefined
 
-因為只傳入一個東西（整個陣列），只有a拿到。
-————————————————————————————————————————————
 const nums = [1, 2, 3, 4, 5];
 function hi(a, b, c) {
   console.log(a, b, c);
 }
 
 hi(nums);
+————————————————————————————————————————————
+結果 [1, 2, 3, 4, 5] undefined undefined
+
+因為只傳入一個東西（整個陣列），只有a拿到。
 ```
 
 ```js
 // 承上題的解法：展開運算子並將陣列拆解為獨立的參數
-結果 1 2 3
-————————————————————————————————————————————
+
 const nums = [1, 2, 3, 4, 5];
 function hi(a, b, c) {
   console.log(a, b, c);
 }
 hi(...nums); // 等於執行：hi(1, 2, 3, 4, 5)
+————————————————————————————————————————————
+結果 1 2 3
 ```
 
 ```js
 // 函式共用
 
 不論點擊 aa 還是 bb，都會跑同一個 h 函式。
-————————————————————————————————————————————
+
 // e.target
 // e.currentTarget
 
@@ -1062,8 +1167,8 @@ bb.addEventListener("click", h);
 // stack堆疊: first in, last out(FILO)
 // queue: first in, first out (FILO)
 
-先放到旁邊排隊，程式不會在這裡停下來等 ，而是會繼續往下執行其他的程式碼， 3 秒鐘一到，瀏覽器才會跳回來執行 console.log(123)
-————————————————————————————————————————————
+先放到旁邊排隊，程式不會在這裡停下來等 ，而是會繼續往下執行其他的程式碼， 3 秒鐘一到，瀏覽器才會跳回來執行 console.log(123)。
+
 setTimeout(() => {
   console.log(123);
 }, 3000);  //3000是三秒的意思
@@ -1072,8 +1177,8 @@ setTimeout(() => {
 ```js
 // 循環執行 Interval間隔
 
-每隔 3 秒鐘它就會在控制台印出一次 123，它不會停止，直到關閉網頁或手動叫停
-————————————————————————————————————————————
+每隔 3 秒鐘它就會在控制台印出一次 123，它不會停止，直到關閉網頁或手動叫停。
+
 setInterval(() => {   //會一直印
   console.log(123);
 }, 3000);
@@ -1081,7 +1186,7 @@ setInterval(() => {   //會一直印
 
 ```js
 // 製作自動累加計時器
-————————————————————————————————————————————
+
 let i = 0;
 setInterval(() => {
   i = i + 1;
@@ -1091,14 +1196,15 @@ setInterval(() => {
 
 ```js
 // 練習判斷
-結果 1 → 3 → (過一秒) → 2
-————————————————————————————————————————————
+
 console.log(1);
 
 setTimeout(() => {
   console.log(2);
 }, 1000);
 console.log(3);
+————————————————————————————————————————————
+結果 1 → 3 → (過一秒) → 2
 ```
 
 返回[JavaScript 技術筆記](#javascript-技術筆記)
@@ -1109,6 +1215,7 @@ console.log(3);
 
 ```js
 //XMLHttpRequest()示範一
+
 const api = "https://typicode.com";
 
 const req = new XMLHttpRequest();
@@ -1127,6 +1234,7 @@ fetch(api)
 
 ```js
 //XMLHttpRequest()示範二
+
 const api = "https://jsonplaceholder.typicode.com/posts";
 
 //建立網路傳送器 (XMLHttpRequest)
@@ -1146,6 +1254,7 @@ req.send(); // 正式按下發送鈕
 
 ```js
 //XMLHttpRequest()示範三:抓每一篇文章的title
+
 const api = "https://jsonplaceholder.typicode.com/posts";
 
 const req = new XMLHttpRequest();
@@ -1172,6 +1281,7 @@ fetch是瀏覽器提供的方法，不是JS提供的。
 
 ```js
 //fetch示範一
+
 const api = "https://jsonplaceholder.typicode.com/posts";
 
 fetch(api)
@@ -1185,6 +1295,7 @@ fetch(api)
 
 ```js
 //fetch示範二:抓每一篇文章的title
+
 const api = "https://jsonplaceholder.typicode.com/posts";
 
 fetch(api)
@@ -1200,13 +1311,14 @@ fetch(api)
 
 ```js
 // fetch 搭配 then 非同步抓取資料
+
 結果 會抓到一個 Response 物件
 
 fetch 抓回來的 x（回應值）就像是一個包裹：
 -包含狀態碼（如 200 代表成功）
 -包含標頭（Headers）
 -真正的資料內容還在包裹裡面，需要用 .json() 方法解開
-————————————————————————————————————————————
+
 const url =
   "https://tcgbusfs.blob.core.windows.net/dotapp/youbike/v2/youbike_immediate.json";
 const result = fetch(url);
@@ -1220,16 +1332,15 @@ result.then((x) => {
 
 ```js
 // 建立一個 Promise 物件
-結果 過 1 秒鐘控制台就會印出 "ok123"
 
 Promise 的三種狀態：
 -Pending (等待中)：初始狀態，還在跑 setTimeout 的那一秒。
 -Fulfilled (已實現)：當我呼叫 resolve()，承諾成功。
 -Rejected (已拒絕)：當我呼叫 reject()，承諾失敗。
 
-new 是指我要做一個東西(也就是promise)出來
-resolve 和 reject 可以改別的名字
-————————————————————————————————————————————
+new 是指我要做一個東西(也就是promise)出來。
+resolve 和 reject 可以改別的名字。
+
 const p1 = new Promise((resolve, reject) => {
   setTimeout(() => {
     resolve("ok123");
@@ -1251,6 +1362,8 @@ const p1 = new Promise((resolve, reject) => {
 
 p1.then(x => console.log(x))
   .catch(err => console.log(err)); // 1 秒後會印出 "出錯啦！"
+————————————————————————————————————————————
+結果 過 1 秒鐘控制台就會印出 "ok123"
 ```
 
 ### aynsc & await / try & catch
@@ -1279,11 +1392,10 @@ console.log("go!");
 
 ```js
 // aynsc & await 承「建立一個 Promise 物件」題
-結果 1 -> (等一秒) -> ok123 -> 2
 
 await的行為（同步化寫法）
 在 async & await 的世界裡不會使用 .then() 和 .catch() 這種「串接」的寫法，而是使用 try...catch 結構。
-————————————————————————————————————————————
+
 console.log(1);
 try {
   const result = await p1;
@@ -1292,17 +1404,19 @@ try {
   console.log(err);
 }
 console.log(2);
-// 當程式執行到 const result = await p1; 時，它會「暫停」後續程式碼（即 console.log(2)）的執行。等到 1 秒鐘 Promise 變成 resolve 狀態後，拿到值並賦予給 result，才繼續往下執行。
+————————————————————————————————————————————
+結果 1 -> (等一秒) -> ok123 -> 2
+
+當程式執行到 const result = await p1; 時，它會「暫停」後續程式碼（即 console.log(2)）的執行。等到 1 秒鐘 Promise 變成 resolve 狀態後，拿到值並賦予給 result，才繼續往下執行。
 ```
 
 比較 then & catch 寫法：
 
 ```js
 // then & catch 承上題
-結果 1 → (過一秒) → ok123 → 2
 
 then 的行為（非同步回呼）
-————————————————————————————————————————————
+
 console.log(1);
 p1.then((x) => {
   console.log(x);
@@ -1310,6 +1424,23 @@ p1.then((x) => {
 }).catch((err) => {
   console.log(err);
 });
+————————————————————————————————————————————
+結果 1 → (過一秒) → ok123 → 2
+```
+
+### CORS 錯誤
+
+```js
+// CORS 錯誤
+
+瀏覽器為了保護用戶安全而實施的一種安全攔截機制。
+用瀏覽器F12抓不到資料但是用node可以因為node不是瀏覽器。
+
+const url = "https://www.tenlong.com.tw/zh_tw/recent_bestselling?range=7";
+
+const resp = await fetch(url);
+const content = await resp.text();
+console.log(content);
 ```
 
 ### Event Loop 事件循環
@@ -1477,7 +1608,6 @@ Postman 會幫忙自動排版以及抓取當下最新更新的資料
 // jQuery 版本
 
 // 用 ready 代替 ...DOMContentLoaded...
-
 $().ready(() => {
   const api =
     "https://tcgbusfs.blob.core.windows.net/dotapp/youbike/v2/youbike_immediate.json";
@@ -1576,20 +1706,6 @@ try {
 } catch (err) {
   console.log(err);
 }
-```
-
-```js
-// 其他小練習
-結果 cc dd ee
-————————————————————————————————————————————
-const a = [
-  { name: "cc", age: 1 },
-  { name: "dd", age: 1 },
-  { name: "ee", age: 1 },
-];
-a.forEach((i) => {
-  console.log(i.name);
-});
 ```
 
 返回[JavaScript 技術筆記](#javascript-技術筆記)
@@ -2170,4 +2286,315 @@ person.sayHi();
 
 返回[JavaScript 技術筆記](#javascript-技術筆記)
 
-<!-- JavaScript FOLDER : 0504.js 完成 -->
+> 以上是JavaScript資料夾 : 0504.js
+
+> 以下是0504資料夾 : app.js
+
+## 初階 TODO 列表製作
+
+```html
+index.html裡：
+...
+    <title>0504下午~0505上午</title>
+    <script defer src="app.js" type="module"></script>
+    <link rel="stylesheet" href="reset.css" />
+    <link rel="stylesheet" href="app.css" />
+  </head>
+  <body>
+    <form id="taskform">
+      <p>TODO</p>
+      <input type="text" name="text" id="taskInput" />
+      <button id="addBtn">新增</button>
+    </form>
+    <hr />
+    <div>
+      <ul id="taskList">
+        <li class="task">
+          <span>HELLO</span>
+          <button type="button">X</button>
+        </li>
+      </ul>
+    </div>
+  </body>
+</html>
+```
+
+```js
+app.js裡：
+// type = module
+// - defer
+// - use strict
+//--------------------------------------
+const addBtn = document.querySelector("#addBtn");
+const taskInput = document.querySelector("#taskInput");
+const taskList = document.querySelector("#taskList");
+const taskform = document.querySelector("#taskform");
+//--------------------------------------
+// 當發生「新增」動作時，指揮「畫圖」與「存檔」同時運作。
+function addtask(text) {
+  renderTask(text);
+  saveTask(text);
+}
+//--------------------------------------
+// 視覺呈現 接收一個 text。製作出 <li> 標籤字串。用 insertAdjacentHTML 塞進畫面的最上方 (afterbegin)。順便清空輸入框，方便下次輸入。
+function renderTask(text, id) {
+  const item = `
+    <li class="task">
+      <span>${text}</span>
+      <button data-id="${id}">X</button>
+    </li>`;
+
+  taskList.insertAdjacentHTML("afterbegin", item);
+  taskInput.value = "";
+}
+//--------------------------------------
+// 把新的任務存進 localStorage
+function saveTask(text) {
+  const tasks = loadTask();
+
+  const taskObj = {
+    id: crypto.randomUUID(),
+    task: text,
+  };
+
+  tasks.push(taskObj);
+  updateStorage(tasks);
+}
+//--------------------------------------
+function updateStorage(tasks) {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+//--------------------------------------
+// 從localStorage抓資料出來
+function loadTask() {
+  let tasks = localStorage.getItem("tasks");
+  if (tasks == null) {
+    tasks = [];
+  } else {
+    tasks = JSON.parse(tasks);
+  }
+
+  return tasks;
+}
+//--------------------------------------
+function init() {
+  const tasks = loadTask();
+
+  tasks.forEach((t) => {
+    const { id, task } = t;
+    renderTask(task, id);
+    // const { id, task } = t;其實是const id = t.id;和const task = t.task;
+  });
+
+  taskform.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const text = taskInput.value.trim(); // 取得輸入框內容
+    if (text !== "") {
+      addtask(text); // 呼叫新增任務的函式
+    }
+  });
+
+  taskList.addEventListener("click", (e) => {
+    // const target = e.target 解構變成下面那行，這行的意思是「如果我點到的東西是按鈕...」。
+    const { target } = e;
+    if (target.nodeName == "BUTTON") {
+      const id = target.dataset.id;
+      const idx = tasks.findIndex((t) => {
+        return t.id == id;
+        // 從清單中找出哪一個任務的 ID 跟目前點擊到的按鈕 ID 一樣。
+      });
+
+      // 在上面fn renderTask的button塞data-id="${id}"
+
+      tasks.splice(idx, 1);
+      updateStorage(tasks);
+
+      target.parentNode.remove();
+    }
+  });
+}
+
+init();
+```
+
+返回[JavaScript 技術筆記](#javascript-技術筆記)
+
+## 製作 TODO APP
+
+使用老師提供的 todoo-app-main 資料夾
+
+```html
+...
+    <title>TODO App</title>
+    <link rel="stylesheet" href="src/styles/style.css" />
+    <script src="src/scripts/app.js" type="module"></script>
+  </head>
+
+  <body x-data="appData" class="container px-2 py-4 mx-auto">
+    <header class="banner">
+      <h1><a href="#todo" class="taskLink">TODO!</a></h1>
+      <div class="subtitle">
+        <p class="text">Simple and Stupid TODO App</p>
+        <p class="hidden text sm:block">
+          powered by
+          <a href="https://5xcampus.com" class="text-link" target="_blank">5xCampus</a>
+          |
+          <a href="https://todoo.5xcamp.us" class="text-link" target="_blank">API</a>
+          |
+          <a href="https://github.com/5xTraining/todoo-app" class="text-link" target="_blank">GitHub</a>
+        </p>
+      </div>
+    </header>
+
+    <main class="px-6 todo-app main">
+      <header>
+        <nav class="navbar">
+          <a x-show="!isLogin" class="loginLink" @click.prevent="goLogin" href="#login">登入</a>
+          <a x-show="!isLogin" class="signUpLink" @click.prevent="goSignUp" href="#sign_up">註冊</a>
+          <a x-show="isLogin" @click="logout" class="signUpLink" href="#">登出</a>
+        </nav>
+      </header>
+
+      <section id="userSection">
+        <!-- Login Section start -->
+        <section x-show="section == 'login'" id="loginSection">
+          <h1>登入</h1>
+          <form @submit.prevent="login" id="loginForm">
+            <div class="field">
+              <label>
+                <h3>Email</h3>
+                <input x-model="email" type="email" id="loginEmail" autocomplete="email" spellcheck="false" placeholder="Email 信箱" />
+              </label>
+            </div>
+
+            <div class="field">
+              <label>
+                <h3>密碼</h3>
+                <input
+                  x-model="password"
+                  type="password"
+                  id="loginPassword"
+                  autocomplete="current-password"
+                  spellcheck="false"
+                  placeholder="密碼，至少需要 6 個字"
+                />
+              </label>
+            </div>
+
+            <div class="items-center justify-between block sm:flex field">
+              <button>登入</button>
+              <div class="text-xl text-gray-600">
+                還沒有帳號嗎？<a href="#" @click.prevent="goSignUp" class="text-link signUpLink">註冊</a>一個吧！
+              </div>
+            </div>
+          </form>
+        </section>
+        <!-- Login Section end -->
+
+        <!-- Sign Up Section start -->
+        <section x-show="section == 'signup'" id="signUpSection">
+          <h1>註冊帳號</h1>
+          <form @submit.prevent="register" id="signUpForm">
+            <div class="field">
+              <label>
+                <h3>Email</h3>
+                <input x-model="email" type="email" id="signUpEmail" autocomplete="email" spellcheck="false" placeholder="Email 信箱" />
+              </label>
+            </div>
+
+            <div class="field">
+              <label>
+                <h3>暱稱</h3>
+                <input
+                  x-model="nickname"
+                  type="text"
+                  id="signUpNickname"
+                  autocomplete="name"
+                  spellcheck="false"
+                  placeholder="要怎麼稱呼你呢？"
+                />
+              </label>
+            </div>
+
+            <div class="field">
+              <label>
+                <h3>密碼</h3>
+                <input
+                  x-model="password"
+                  type="password"
+                  id="signUpPassword"
+                  autocomplete="new-password"
+                  spellcheck="false"
+                  placeholder="密碼，至少需要 6 個字"
+                />
+              </label>
+            </div>
+
+            <div class="items-center justify-between block sm:flex field">
+              <button>註冊</button>
+              <div class="text-xl text-gray-600">
+                已經有帳號了？<a href="#" @click.prevent="goLogin" class="text-link loginLink">登入</a>
+              </div>
+            </div>
+          </form>
+        </section>
+        <!-- Sign Up Section end -->
+      </section>
+
+      <!-- TODO Section start -->
+      <section x-show="section == 'task'" id="taskSection">
+        <form @submit.prevent="addTodo" id="todoForm">
+          <input x-model="content" type="text" id="taskInput" autocomplete="off" spellcheck="false" placeholder="做點重要的事吧..." />
+          <button id="addTodoBtn">新增</button>
+        </form>
+      </section>
+      <!-- TODO Section end -->
+    </main>
+
+    <section class="todo-list">
+      <ul class="items">
+        <!-- item start -->
+        <!-- 被template包起來的東西不會顯示 -->
+        <template x-for="todo in todos">
+          <li>
+            <div class="item-content">
+              <label>
+                <input type="checkbox" />
+                <p class="content" x-text="todo.content"></p>
+              </label>
+            </div>
+            <div class="item-control">
+              <a href="#" class="edit"><img class="icon" src="src/assets/pen-to-square-solid.svg" /></a>
+              <!-- 如果js用deleteTodo(id)，不用寫data-id="123"，然後@click.prevent="deleteTodo"要變成@click.prevent="deleteTodo(todo.id)" -->
+              <!-- 如果JS不是用deleteTodo(id)，那下面這行就要改成<a data-id="123" @click.prevent="deleteTodo" href="#" class="delete"
+                > -->
+              <a @click.prevent="deleteTodo(todo.id)" href="#" class="delete"><img class="icon" src="src/assets/trash-can-solid.svg" /></a>
+            </div>
+          </li>
+        </template>
+        <!-- item end -->
+      </ul>
+    </section>
+
+    <footer>
+      <p>
+        powered by
+        <a href="https://5xcampus.com" class="underline">5XCAMPUS</a> | <a href="https://todoo.5xcamp.us" class="underline">API</a> |
+        <a href="https://github.com/5xTraining/todoo-app" class="underline">SOURCE</a>
+      </p>
+    </footer>
+  </body>
+</html>
+```
+
+```js
+pages.js裡：
+
+```
+
+```js
+app.js裡：
+
+```
+
+返回[JavaScript 技術筆記](#javascript-技術筆記)
