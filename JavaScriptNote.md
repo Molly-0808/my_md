@@ -2589,12 +2589,411 @@ init();
 
 ```js
 pages.js裡：
+import axios from "axios"
+const taskSection = document.querySelector("#taskSection")
+const loginSection = document.querySelector("#loginSection")
+const signUpSection = document.querySelector("#signUpSection")
+const loginLinks = document.querySelectorAll(".loginLink")
+const signUpLinks = document.querySelectorAll(".signUpLink")
+const taskLinks = document.querySelectorAll(".taskLink")
+// ————————————————————————————————————
+// 註冊
+const signUpEmail = document.querySelector("#signUpEmail")
+const signUpNickname = document.querySelector("#signUpNickname")
+const signUpPassword = document.querySelector("#signUpPassword")
+const signUpForm = document.querySelector("#signUpForm")
+signUpForm.addEventListener("submit", (e) => {
+  e.preventDefault()
+  // 打 API
+  const url = "https://todoo.5xcamp.us/users"
+  const userData = {
+    user: {
+      email: signUpEmail.value,
+      nickname: signUpNickname.value,
+      password: signUpPassword.value,
+    },
+  }
+  axios
+    .post(url, userData)
+    .then((resp) => {
+      console.log(resp)
+      showLoginPage()
+    })
+    .catch((err) => {
+      console.log(err.response.data)
+    })
+  // URL userdata axios.post(地方,傳啥).then.catch
+  console.log(axios)
+  console.log("Email:", signUpEmail.value)
+  console.log("暱稱:", signUpNickname.value)
+  console.log("密碼:", signUpPassword.value)
+})
+// ————————————————————————————————————
+// 登入
+const loginEmail = document.querySelector("#loginEmail")
+const loginPassword = document.querySelector("#loginPassword")
+const loginForm = document.querySelector("#loginForm")
+loginForm.addEventListener("submit", (e) => {
+  e.preventDefault()
+  // 打 API
+  const url = "https://todoo.5xcamp.us/users/sign_in"
+  const userData = {
+    user: {
+      email: loginEmail.value,
+      password: loginPassword.value,
+    },
+  }
+  axios
+    .post(url, userData)
+    .then((resp) => {
+      const token = resp.headers.authorization
+      if (token) {
+        localStorage.setItem("userToken", token)
+        showTaskPage()
+      }
+    })
+    .catch((err) => {
+      console.log(err.response.data)
+    })
 
+  console.log("Email:", loginEmail.value)
+  console.log("密碼:", loginPassword.value)
+})
+// ————————————————————————————————————
+// TODO
+const todoForm = document.querySelector("#todoForm")
+const taskInput = document.querySelector("#taskInput")
+
+todoForm.addEventListener("submit", (e) => {
+  e.preventDefault()
+  const content = taskInput.value
+  const token = localStorage.getItem("userToken")
+  if (token != "" && content != "") {
+    const url = "https://todoo.5xcamp.us/todos"
+    const todoData = {
+      todo: {
+        content,
+      },
+    }
+
+    axios
+      .post(url, todoData, { headers: { Authorization: token } })
+      .then((resp) => {
+        console.log(resp)
+      })
+      .catch((err) => {
+        console.log(err.response.data)
+      })
+  }
+})
+// ————————————————————————————————————
+taskLinks.forEach((link) => {
+  link.addEventListener("click", (e) => {
+    e.preventDefault()
+    showTaskPage()
+  })
+})
+
+loginLinks.forEach((link) => {
+  link.addEventListener("click", (e) => {
+    e.preventDefault()
+    showLoginPage()
+  })
+})
+
+signUpLinks.forEach((link) => {
+  link.addEventListener("click", (e) => {
+    e.preventDefault()
+    showSignUpPage()
+  })
+})
+
+const initPages = () => {
+  const token = localStorage.getItem("userToken")
+  if (token) {
+    showTaskPage
+  } else {
+    showLoginPage()
+  }
+}
+
+const showTaskPage = () => {
+  taskSection.classList.remove("hidden")
+  loginSection.classList.add("hidden")
+  signUpSection.classList.add("hidden")
+
+  const url = "https://todoo.5xcamp.us/todos"
+  const token = localStorage.getItem("userToken")
+  if (token) {
+    // if(token)就是假如有登入成功。
+    axios
+      .get(url, { headers: { Authorization: token } })
+      .then((resp) => {
+        console.log(resp)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+}
+
+const showLoginPage = () => {
+  taskSection.classList.add("hidden")
+  loginSection.classList.remove("hidden")
+  signUpSection.classList.add("hidden")
+}
+
+const showSignUpPage = () => {
+  taskSection.classList.add("hidden")
+  loginSection.classList.add("hidden")
+  signUpSection.classList.remove("hidden")
+}
+
+export { initPages, showTaskPage, showLoginPage, showSignUpPage }
 ```
 
 ```js
 app.js裡：
+//安裝 npm install alpinejs
 
+// 執行Alpine要先初始化，寫這三行：
+
+// import Alpine from "alpinejs"
+
+// window.Alpine = Alpine
+
+// Alpine.start()
+
+// 信箱mo@g
+// 密碼mmm111
+//-------------------------------
+// 有async在函數裡面才可以用await
+// 沒有函數就可以直接在開頭寫await...
+//-------------------------------
+import Alpine from "alpinejs"
+import axios from "axios"
+
+window.Alpine = Alpine
+
+// data
+const appData = () => ({
+  section: "login",
+  isLogin: false,
+  email: "",
+  password: "",
+  nickname: "",
+  content: "",
+  todos: [], // todos: [1, 2, 3],裡面寫多少數字決定要列出多少「我要學Python」任務，搭配HTML的template x-for="todo in todos"包住「我要學Python」的li。
+
+  init() {
+    const token = this.getToken()
+    if (token) {
+      this.isLogin = true
+      this.goTask()
+      this.getTodos()
+    } else {
+      this.isLogin = false
+      this.goLogin()
+    }
+  },
+  getToken() {
+    return localStorage.getItem("userToken")
+  },
+
+  resetForm() {
+    this.email = ""
+    this.password = ""
+    this.nickname = ""
+  },
+
+  // TODO列表
+  // 從伺服器把所有待辦事項抓回來
+  async getTodos() {
+    const url = "https://todoo.5xcamp.us/todos"
+    const token = this.getToken() // 伺服器必須知道是「誰」要看清單，所以去 localStorage 把登入時存的身分證（Token）拿出來。
+
+    try {
+      const resp = await axios.get(url, { headers: { Authorization: token } })
+
+      this.todos = resp.data.todos
+    } catch (err) {
+      console.log(err)
+    }
+  },
+
+  // 刪除TODO
+  // async deleteTodo(e) {
+  //   // 按到誰?
+  //   console.log(e.currentTarget.dataset.id)
+
+  //   const id = e.currentTarget.dataset.id
+  //   const url = `https://todoo.5xcamp.us/todos/${id}`
+  //   const token = this.getToken()
+  //   try {
+  //     await axios.delete(url, { headers: { Authorization: token } })
+  //     this.getTodos()
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
+  // },
+
+  // 刪除TODO更推薦的寫法
+  async deleteTodo(id) {
+    // console.log(id)
+    if (id) {
+      const url = `https://todoo.5xcamp.us/todos/${id}`
+      const token = this.getToken()
+
+      try {
+        // 演戲
+        const idx = this.todos.findIndex((t) => t.id == id)
+
+        this.todos.splice(idx, 1)
+
+        // 真刪
+        await axios.delete(url, { headers: { Authorization: token } })
+      } catch (err) {
+        console.log(err)
+      }
+    }
+  },
+
+  // 新增TODO
+  async addTodo() {
+    const url = "https://todoo.5xcamp.us/todos"
+    const token = this.getToken()
+    const todoData = {
+      todo: {
+        content: this.content,
+      },
+    }
+
+    if (token && this.content !== "") {
+      try {
+        // 演戲(樂觀更新)
+        this.todos.unshift({
+          id: crypto.randomUUID(),
+          content: this.content,
+          complete_at: null,
+          // 代表該筆代辦事項的完成時間，當值為 null 時，代表這項任務還沒被勾選完成。
+        })
+        this.content = ""
+
+        // 新增 todo 列表
+        const resp = await axios.post(url, todoData, { headers: { Authorization: token } })
+
+        // 更新 todo 列表
+        this.getTodos()
+      } catch (err) {
+        console.log(err)
+      }
+    }
+  },
+  // 登出
+  async logout() {
+    const url = "https://todoo.5xcamp.us/users/sign_out"
+    const token = this.getToken()
+
+    if (token) {
+      try {
+        // 清 session
+        const resp = await axios.delete(url, { headers: { Authorization: token } })
+
+        // 清 token 把瀏覽器的憑證刪除
+        localStorage.removeItem("userToken")
+
+        this.isLogin = false
+
+        this.goLogin()
+      } catch (err) {
+        console.log(err)
+      }
+    }
+  },
+
+  //註冊
+  async register() {
+    const url = "https://todoo.5xcamp.us/users"
+    const userData = {
+      user: {
+        email: this.email,
+        password: this.password,
+        nickname: this.nickname,
+      },
+    }
+
+    try {
+      const resp = await axios.post(url, userData)
+      this.resetForm() // 呼叫 resetForm() 清空輸入框
+      this.goLogin()
+    } catch (err) {
+      console.log(err)
+    }
+  },
+
+  // 登入
+  async login() {
+    const url = "https://todoo.5xcamp.us/users/sign_in"
+    const userData = {
+      user: {
+        email: this.email,
+        password: this.password,
+      },
+    }
+
+    try {
+      const resp = await axios.post(url, userData)
+      const token = resp.headers.authorization
+      if (token) {
+        localStorage.setItem("userToken", token) // 把 Token 存在瀏覽器裡，重新整理網頁才不會被登出
+        this.resetForm()
+        this.isLogin = true
+        this.goTask()
+      }
+    } catch (err) {
+      console.log("登入失敗")
+    }
+  },
+
+  // login() {
+  //   const url = "https://todoo.5xcamp.us/users/sign_in"
+  //   const userData = {
+  //     user: {
+  //       email: this.email,
+  //       password: this.password,
+  //     },
+  //   }
+  //   axios
+  //     .post(url, userData)
+  //     .then((resp) => {
+  //       const token = resp.headers.authorization
+  //       if (token) {
+  //         localStorage.setItem("userToken", token)
+  //         this.goTask()
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       console.log(err.response.data)
+  //     })
+  //   console.log(this.email, this.password)
+  // },
+
+  //下面的"login"、"signup"、"task"是自己定義的，用來標記目前網頁應該顯示哪一個畫面，也可以改成別的名字，但也要記得去HTML改。
+  goLogin() {
+    this.section = "login"
+  },
+  goSignUp() {
+    this.section = "signup"
+  },
+  goTask() {
+    this.section = "task"
+  },
+})
+
+Alpine.data("appData", appData)
+//註冊寫法：Alpine.data("自己取名比如appData", appData)，再去HTML的main後面加入x-data="appData" <---這個appData是JS註冊那邊自己取的。
+
+Alpine.start()
 ```
 
 返回[JavaScript 技術筆記](#javascript-技術筆記)
