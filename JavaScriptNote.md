@@ -50,6 +50,9 @@
   - [this](#this)
   - [初階 TODO 列表製作](#初階-todo-列表製作)
   - [製作 TODO APP](#製作-todo-app)
+  - [pass by reference / pass by value](#pass-by-reference--pass-by-value)
+  - [recursive 遞迴](#recursive-遞迴)
+  - [throw](#throw)
 
 ## for 迴圈
 
@@ -1099,7 +1102,7 @@ console.log(result);
 ```
 
 ```js
-// 承上題，用 typeof 進行「資料清洗」
+// 承上題，用 typeof 過濾型態
 
 function addOne(...a) {
   return a.filter((i) => typeof i == "number").map((i) => i + 1);
@@ -2994,6 +2997,78 @@ Alpine.data("appData", appData)
 //註冊寫法：Alpine.data("自己取名比如appData", appData)，再去HTML的main後面加入x-data="appData" <---這個appData是JS註冊那邊自己取的。
 
 Alpine.start()
+```
+
+返回[JavaScript 技術筆記](#javascript-技術筆記)
+
+## pass by reference / pass by value
+
+```js
+// "pass by reference"傳址
+let obj = { name: "cc", age: 18 };
+
+function older(o) {
+  o.age += 1;
+}
+
+older(obj);
+console.log(obj.age); //18
+
+如果把function older(o) {
+裡面換成o = {name: "cc", age: 20}
+}
+結果還是18，因為只在函數裡改，沒有修改原本的物件。
+
+// "pass by value"傳值
+// let obj = { name: "cc", age: 18 };
+let num = 10;
+
+function add(n) {
+  n += 1;
+}
+
+add(num);
+console.log(num); //10
+```
+
+## recursive 遞迴
+
+```js
+// 費波那契數
+// recursive 遞迴
+
+// n = 第 n 項
+function fib(n) {
+  if (n == 1 || n == 2) {
+    return 1;
+  }
+
+  return fib(n - 1) + fib(n - 2);
+}
+
+// [1, 1, 2, 3, 5, 8, 13, 21, 34, 55]
+console.log(fib(5)); // 5
+console.log(fib(8)); // 21
+```
+
+## throw
+
+```js
+function greeting() {
+  throw "Hello world!";
+}
+
+function sayHi() {
+  try {
+    const data = greeting();
+    console.log("It worked!", data);
+  } catch (e) {
+    console.log("Oh no an error:", e);
+  }
+}
+
+sayHi();
+// Oh no an error: Hello world!
 ```
 
 返回[JavaScript 技術筆記](#javascript-技術筆記)
