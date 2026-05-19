@@ -46,13 +46,17 @@
   - [axios](#axios)
   - [dayjs](#dayjs)
   - [Block Scope / function scope / lexical scope / closure / IIFE](#block-scope--function-scope--lexical-scope--closure--iife)
-  - [**proto** / prototype / 原型打造 / 語法糖衣](#proto--prototype--原型打造--語法糖衣)
+  - [`__proto__` / prototype / 原型打造 / 語法糖衣](#__proto__--prototype--原型打造--語法糖衣)
   - [this](#this)
   - [初階 TODO 列表製作](#初階-todo-列表製作)
   - [製作 TODO APP](#製作-todo-app)
   - [pass by reference / pass by value](#pass-by-reference--pass-by-value)
   - [recursive 遞迴](#recursive-遞迴)
   - [throw](#throw)
+  - [TDD](#tdd)
+    - [安裝 Jest](#安裝-jest)
+    - [Regex (Regular Expression)](#regex-regular-expression)
+  - [TDD 實作](#tdd-實作)
 
 ## for 迴圈
 
@@ -1767,22 +1771,22 @@ import cc from "./lib.js";
 建立package.json
 ![建立package.json](./image/1.jpg)
 
-寫腳本測試
+寫腳本測試 "scripts":{}
 ![寫腳本測試](./image/2.jpg)
 
-安裝dayjs
+安裝 dayjs ： npm i dayjs
 ![安裝dayjs](./image/3.jpg)
 
 安裝後的變化
 ![安裝後的變化](./image/4.jpg)
 
-安裝vue
+安裝 vue ： npm i vue
 ![安裝vue](./image/5.jpg)
 
-卸載的方式
+卸載的方式 npm uninstall vue
 ![卸載的方式](./image/6.jpg)
 
-加上"type"="module"
+加上"type"="module",
 ![加上"type"="module"](./image/7.jpg)
 
 測試node跑成功了沒
@@ -1791,8 +1795,8 @@ import cc from "./lib.js";
 承上頁
 ![測試node跑成功了沒](./image/9.jpg)
 
-打包工具vite
-![打包工具vite](./image/10.jpg)
+安裝打包工具 vite ： npm i -D vite
+![安裝vite](./image/10.jpg)
 
 npm run dev
 ![npm run dev](./image/11.jpg)
@@ -1978,7 +1982,7 @@ for (var i = 0; i < 3; i++) {
 
 返回[JavaScript 技術筆記](#javascript-技術筆記)
 
-## **proto** / prototype / 原型打造 / 語法糖衣
+## `__proto__` / prototype / 原型打造 / 語法糖衣
 
 ```js
 //物件導向程式設計 OOP
@@ -3069,6 +3073,150 @@ function sayHi() {
 
 sayHi();
 // Oh no an error: Hello world!
+```
+
+返回[JavaScript 技術筆記](#javascript-技術筆記)
+
+## TDD
+
+### 安裝 Jest
+
+Jest 是由 Meta (Facebook) 開發並維護的一個 JS 測試框架。
+
+npm i -D jest
+
+```js
+在 package.json 裡寫上腳本：
+{
+  "scripts": {
+    "test": "node --disable-warning=ExperimentalWarning  --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "type": "module",
+  "devDependencies": {
+    "jest": "^30.4.2"
+  }
+}
+```
+
+npm run test
+
+### Regex (Regular Expression)
+
+Regex 是一串用來定義「搜尋模式」的文字字串。
+
+https://regex101.com/
+
+![regex](./image/regex.png)
+
+email常規表示法：
+
+https://stackoverflow.com/questions/201323/how-can-i-validate-an-email-address-using-a-regular-expression
+
+```
+(?:[a-z0-9!#$%&'*+\x2f=?^_`\x7b-\x7d~\x2d]+(?:\.[a-z0-9!#$%&'*+\x2f=?^_`\x7b-\x7d~\x2d]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9\x2d]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9\x2d]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9\x2d]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])
+```
+
+返回[JavaScript 技術筆記](#javascript-技術筆記)
+
+## TDD 實作
+
+```
+建立 __tests__ 資料夾 和 lib 資料夾
+
+__tests__ 裡面放測試檔案
+
+lib 裡面放原始碼檔案
+
+原則：先寫測試再寫原始碼
+```
+
+```js
+在 __tests__ 的 temperature.test.js 裡：
+
+import { f2c, c2f } from "../lib/temperature.js";
+
+test("1 + 1 = 2", () => {
+  expect(1 + 1).toBe(2);
+});
+
+test("溫度轉換公式(華氏轉攝氏)", () => {
+  expect(f2c(150)).toBe(65.6);
+  expect(f2c(178)).toBe(81.1);
+});
+
+test("溫度轉換公式(攝氏轉華氏)", () => {
+  expect(c2f(38)).toBe(100.4);
+  expect(c2f(66)).toBe(150.8);
+});
+```
+
+```js
+在 lib 的 temperature.js 裡：
+
+function f2c(f) {
+  return Number((((f - 32) * 5) / 9).toFixed(1));
+}
+f2c(140);
+
+function c2f(c) {
+  return Number(((c * 9) / 5 + 32).toFixed(1));
+}
+c2f(40);
+
+export { f2c, c2f };
+```
+
+```js
+在 __tests__ 的 atm.test.js 裡：
+
+存錢功能
+可以存錢
+不可以存 0 元或是小於 0 元的金額（越存錢越少！）
+領錢功能
+可以領錢
+不能領 0 元或是小於 0 元的金額（越領錢越多！）
+不能領超過本身餘額
+// 以上是題目
+
+// 存錢功能
+import { BankAccount } from "../lib/BankAccount.js";
+
+  // 3A原則
+test("可以存錢", () => {
+  // Arrange
+  const account = new BankAccount(5);
+
+  // Act
+  account.deposit(10);
+
+  // Assert
+  expect(account.balance()).toBe(15);
+});
+```
+
+```js
+在 lib 的 BankAccount.js 裡：
+
+class BankAccount {
+  // Arrange
+  constructor(amount) {
+    this.balance = amount;
+  }
+
+  // Act: 存錢
+  deposit(money) {
+    if (money > 0) {
+      this.balance += money;
+    }
+  }
+
+  // Assert: 查詢餘額
+  getBalance() {
+    return this.balance;
+  }
+}
+
+export { BankAccount };
 ```
 
 返回[JavaScript 技術筆記](#javascript-技術筆記)
