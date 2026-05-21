@@ -2,20 +2,29 @@
 
 - [Git 技術筆記](#git-技術筆記)
   - [git config](#git-config)
+    - [基本設定](#基本設定)
+    - [用 git config 設定指令的縮寫](#用-git-config-設定指令的縮寫)
+    - [用 git config 設定今後的 master 都自動變成 main](#用-git-config-設定今後的-master-都自動變成-main)
   - [git init](#git-init)
     - [如何建立 .git 資料夾](#如何建立-git-資料夾)
     - [如何取消 git init](#如何取消-git-init)
-  - [git add](#git-add)
+  - [git add 【從工作目錄加到暫存區】](#git-add-從工作目錄加到暫存區)
     - [如何 git add](#如何-git-add)
     - [如何取消 git add](#如何取消-git-add)
-  - [git commit](#git-commit)
+  - [git commit 【從暫存區加到本地儲存庫】](#git-commit-從暫存區加到本地儲存庫)
+    - [如何 commit](#如何-commit)
+    - [如何取消 commit](#如何取消-commit)
   - [查看紀錄相關指令](#查看紀錄相關指令)
     - [git status](#git-status)
     - [git blame](#git-blame)
     - [git log](#git-log)
-    - [用 git config 設定指令別名(縮寫)](#用-git-config-設定指令別名縮寫)
-  - [git branch](#git-branch)
-  - [git push](#git-push)
+    - [git branch](#git-branch)
+  - [git branch](#git-branch-1)
+    - [git switch](#git-switch)
+    - [git checkout](#git-checkout)
+  - [git push / git pull](#git-push--git-pull)
+    - [在本地加入遠端 GitHub 專案](#在本地加入遠端-github-專案)
+    - [正式 git push](#正式-git-push)
   - [.gitignore](#gitignore)
   - [git reset](#git-reset)
   - [git reflog](#git-reflog)
@@ -24,6 +33,8 @@
   - [git rebase](#git-rebase)
 
 ## git config
+
+### 基本設定
 
 - 1\. 開啟 VS Code 內建終端機：按 Ctrl ` (Tab 上面那個鍵)
 
@@ -35,7 +46,16 @@
 
 > 因為有傳遞 --global參數，只需操作一次
 
-> $代表要在 PowerShell 裡面執行，不須寫入指令
+> $代表要在 PowerShell 裡面執行，不必把錢字號也寫上去
+
+### 用 git config 設定指令的縮寫
+
+- $`git config --global alias.別名nnn "原指令log --oneline --author"`
+  - 縮寫變：$`git nnn`
+
+### 用 git config 設定今後的 master 都自動變成 main
+
+- $`git config --global init.defaultBranch main`
 
 返回[Git 技術筆記](#git-技術筆記)
 
@@ -45,17 +65,13 @@
 
 - 1\. 在電腦建立新資料夾
 
-- 2\. 用Windows PowerShell (電腦終端機) cd 到該資料夾
+- 2\. 直接開啟 VS Code 新視窗，拖拉新資料夾進入 VS Code
 
-- 3\. 輸入 code . (.前面要有空格)開啟有該資料夾的 VS Code
+- 3\. 開啟 VS Code 內建終端機：按 Ctrl ` (Tab 上面那個鍵)
 
-- 4\. 或不採用前兩步驟，直接開啟 VS Code 新視窗，拖拉新資料夾進入 VS Code
+- 4\. 生成 .git 資料夾：$`git init`
 
-- 5\. 開啟 VS Code 內建終端機：按 Ctrl ` (Tab 上面那個鍵)
-
-- 6\. 生成 .git 資料夾：$`git init`
-
-- 7\. 確認版本號：$`git --version `
+- 5\. 確認版本號：$`git --version `
 
 ### 如何取消 git init
 
@@ -67,7 +83,7 @@
 
 返回[Git 技術筆記](#git-技術筆記)
 
-## git add
+## git add 【從工作目錄加到暫存區】
 
 ### 如何 git add
 
@@ -77,11 +93,11 @@
 
 - 加入某個資料夾內的某個檔案：$`git add 資料夾名稱/aaa.md`
 
-- 加入目前所有資料夾內全部新增或修改過的檔案：$`git add .`(.前面要有空格)
+- 加入目前所有資料夾內全部新增或修改過的檔案：$`git add .`(點點前要有空格)
 
 - 一次性加入特定多個檔案：$`git add aaa.md bbb.md ccc.md`(檔案中間空格即可)
 
-> git add 只會加入檔案，若命令輸入資料夾，代表加入該資料夾內的所有檔案
+> git add 不會加入資料夾，只會加入「檔案」。若命令輸入資料夾，代表加入該資料夾內的所有檔案。
 
 ### 如何取消 git add
 
@@ -91,17 +107,19 @@
 
 返回[Git 技術筆記](#git-技術筆記)
 
-## git commit
+## git commit 【從暫存區加到本地儲存庫】
+
+### 如何 commit
 
 - 儲存檔案：$`git commit -m "第一次commit"`
 
-> git add檔案之後 commit的就是剛才add的那些檔案
+> git add 後 commit 的東西就是剛才 add 過的檔案
 
-- 修改最新commit的備註訊息：$`git commit --amend -m "有錯字可以這樣改"`(SHA值會變)
+- 修改最新commit的備註訊息(SHA值會變)：$`git commit --amend -m "有錯字可改"`
 
-- commit 了，但是 commit 的檔案內容不是我要的：$`git reset`
+- 把所有「已修改」和「已刪除」的檔案 add 並 commit：$`git commit -a -m "跳過暫存區直接儲存囉"`
 
-- 跳過暫存區直接commit：$`git commit -a -m "跳過暫存區直接儲存囉"`
+### 如何取消 commit
 
 > 如果已經commit過，需要修改檔案，只要重新add再commit就好
 
@@ -142,18 +160,81 @@
 
 - 查看特時間區間的commit：$`git log --since="2026-04-14 09:00" --until="2026-04-14 17:30"`
 
-### 用 git config 設定指令別名(縮寫)
+### git branch
 
-- ：$`git config --global alias.別名al "原指令log --oneline --author"`
-  - 縮寫變：$`git al`
+- 查看目前 (本機) 有哪些 branches：$`git branch`
+
+- 查看所有 branch 包含遠端(all)：$`git branch -a`
 
 返回[Git 技術筆記](#git-技術筆記)
 
 ## git branch
 
+- 在現在位置建立名為 momo 的分支：$`git branch momo`
+
+- 刪除名為 momo 的分支：$`git branch -d momo`
+
+- 強制刪除名為 momo 的分支：$`git branch -D momo`
+
+- 重命名目前的分支：$`git branch -m 新分支名`
+
+- 強制重命名目前的分支：$`git branch -M 新分支名`
+
+- 在指定的 commit（SHA）位置建立一個新的分支：$`git branch 分支名 SHA值`
+
+### git switch
+
+- 將 HEAD(我的編輯位置) 移到指定的分支：$`git switch 指定分支名`
+
+- 建立新分支並把位置切換去新分支：$`git switch -c 分支名`
+
+- 切換位置回上一個分支：$`git switch -`
+
+- 切換位置到指定 commit（進入斷頭 detached HEAD）：$`git switch --detach SHA值`
+
+### git checkout
+
+- 將 HEAD(我的編輯位置) 移到指定的分支：$`git checkout 指定分支名`
+
+- 建立新分支並把位置切換去新分支：$`git checkout -b 分支名`
+
+- 切換位置回上一個分支：$`git checkout -`
+
+- 切換位置到指定 commit（進入斷頭 detached HEAD）：$`git checkout SHA值`
+
+- 僅單一檔案內容恢復成指定 commit 的版本：$`git checkout SHA值 aaa.md`
+
 返回[Git 技術筆記](#git-技術筆記)
 
-## git push
+## git push / git pull
+
+### 在本地加入遠端 GitHub 專案
+
+- 在本地加入遠端 GitHub 專案並取暱稱：$`git remote add 儲存庫名 儲存庫網址`
+
+> 儲存庫名預設是 origin ，可自己改別的暱稱。
+
+- 首次推送本地分支 main 到遠端儲存庫 origin，並設定上游分支的對應：$`git push -u 儲存庫名origin 本地分支main`
+
+> 設定上游分支的對應是指 -u，即 --set-upstream 的縮寫。
+
+- 儲存庫重新命名：$`git remote rename 舊名 新名`
+
+### 正式 git push
+
+- 推送預設分支到預設的遠端儲存庫：$`git push`
+
+- 推送分支到遠端儲存庫：$`git push 儲存庫名origin 分支名main`
+
+- 強制推送：$`git push 儲存庫名origin 分支名main -f`
+
+- 本地的某分支推到遠端的某分支 (名字相同時可省略)：$`git push 儲存庫名origin 本地分支名:遠端分支名`
+
+> 此動作容易將本地分支和遠端分支取不同名字導致不便。
+
+- 刪除遠端分支：$`git push 儲存庫名origin :遠端分支名`
+
+> 冒號前面要留空格，因為冒號前面原本是本地分支的位置，但現在空著，等於是用「空無一物」覆蓋遠端分支，結果就是把該遠端分支刪除了。
 
 返回[Git 技術筆記](#git-技術筆記)
 
