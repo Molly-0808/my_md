@@ -21,6 +21,8 @@
       - [insertAdjacentElement("", ) / insertAdjacentHTML("", )：](#insertadjacentelement---insertadjacenthtml-)
     - [Event Flow 事件流程](#event-flow-事件流程)
     - [DOM 和 addEventListener() 監聽器 練習題](#dom-和-addeventlistener-監聽器-練習題)
+      - [基礎練習](#基礎練習)
+      - [進階練習 圖片輪播](#進階練習-圖片輪播)
   - [ES6](#es6)
     - [「...」其餘參數](#其餘參數)
   - [setTimeout() / setInterval()](#settimeout--setinterval)
@@ -904,6 +906,8 @@ currentTarget：事件在哪發生的
 
 ### DOM 和 addEventListener() 監聽器 練習題
 
+#### 基礎練習
+
 ```html
 html裡：
 ...
@@ -1014,6 +1018,225 @@ link.addEventListener("click", function (e) {
   e.preventDefault(); // 把原本預設的行為停下來
   console.log("我被按了");
 });
+```
+
+#### 進階練習 圖片輪播
+
+```html
+index html裡：
+...
+  <head>
+...
+    <title>圖片輪播</title>
+    <link rel="stylesheet" href="styles/style.css" />
+    <script defer src="scripts/app.js"></script>
+  </head>
+  <body>
+    <main>
+      <div class="carousel">
+        <button class="carousel-btn prev-btn">&larr;</button>
+        <div class="container">
+          <ul class="slide-track">
+            <li class="slide"><img src="images/cat1.jpg" /></li>
+            <li class="slide"><img src="images/cat2.jpg" /></li>
+            <li class="slide"><img src="images/cat3.jpg" /></li>
+            <li class="slide"><img src="images/cat4.jpg" /></li>
+            <li class="slide"><img src="images/cat5.jpg" /></li>
+          </ul>
+        </div>
+        <button class="carousel-btn next-btn">&rarr;</button>
+
+        <nav class="navigator">
+          <button data-index="0" class="indicator active"></button>
+          <button data-index="1" class="indicator"></button>
+          <button data-index="2" class="indicator"></button>
+          <button data-index="3" class="indicator"></button>
+          <button data-index="4" class="indicator"></button>
+        </nav>
+      </div>
+    </main>
+  </body>
+</html>
+```
+
+```css
+body {
+  margin: 0;
+}
+
+/* carousel and container */
+.carousel {
+  position: relative;
+  height: 500px;
+  width: 80vw;
+  margin: 10px auto;
+}
+
+.container {
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+/* track */
+.container > .slide-track {
+  margin: 0;
+  height: 100%;
+  list-style: none;
+}
+
+/* slides */
+.slide-track > .slide {
+  inset: 0;
+  width: 100%;
+  position: absolute;
+}
+
+.slide-track > .slide > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* next and previous navigator buttons */
+.carousel .carousel-btn {
+  position: absolute;
+  background: none;
+  border: none;
+  font-size: 2em;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.carousel .carousel-btn:hover {
+  background-color: rgba(231, 221, 221, 0.2);
+}
+
+.carousel .prev-btn {
+  left: -60px;
+}
+
+.carousel .next-btn {
+  right: -60px;
+}
+
+/* dot indicators */
+.carousel nav {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.carousel nav > .indicator {
+  border-radius: 50%;
+  border: 0;
+  width: 16px;
+  height: 16px;
+  background-color: rgba(0, 0, 0, 0.4);
+  margin: 5px 10px;
+  cursor: pointer;
+}
+
+.carousel nav > .indicator.active {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.hide {
+  display: none;
+}
+```
+
+```js
+app.js裡：
+
+const carousel = document.querySelector(".carousel")
+const slides = carousel.querySelectorAll(".slide")
+const track = carousel.querySelector(".slide-track")
+const nextBtn = carousel.querySelector(".next-btn")
+const prevBtn = carousel.querySelector(".prev-btn")
+const navigator = carousel.querySelector(".navigator")
+const indicators = navigator.querySelectorAll(".indicator")
+let currentIndex = 0
+
+function updateNavigatorButtons(index) {
+  if (index == 0) {
+    prevBtn.classList.add("hide") //hide寫在css
+    nextBtn.classList.remove("hide")
+  } else if (index == slides.length - 1) {
+    prevBtn.classList.remove("hide")
+    nextBtn.classList.add("hide")
+  } else {
+    prevBtn.classList.remove("hide")
+    nextBtn.classList.remove("hide")
+  }
+}
+
+// 帶入多少index就移動到多少張去
+function moveSlide(index) {
+  const w = track.clientWidth
+  track.style.transform = `translateX(-${index * w}px)`
+  updateNavigatorButtons(index)
+  updateIndicator(index)
+}
+
+function updateIndicator(index) {
+  indicators.forEach((indicator) => {
+    if (Number(indicator.dataset.index) === index) {
+      indicator.classList.add("active")
+      // active是class，看css是背景色變黑。
+    } else {
+      indicator.classList.remove("active")
+    }
+  })
+}
+
+function setupSlides() {
+  const w = track.clientWidth
+
+  slides.forEach((slide, i) => {
+    slide.style.left = `${i * w}px`
+    // 計算每張投影片應該向左偏移多少距離。
+  })
+
+  updateNavigatorButtons(currentIndex)
+  updateIndicator(currentIndex)
+}
+
+setupSlides()
+
+// 監聽器們
+prevBtn.addEventListener("click", () => {
+  currentIndex--
+  moveSlide(currentIndex)
+})
+
+nextBtn.addEventListener("click", () => {
+  currentIndex++
+  // 等於 currentIndex = currentIndex + 1;
+  // 最上面有宣告let currentIndex = 0
+  // currentIndex代表目前畫面上顯示第幾張投影片
+  moveSlide(currentIndex)
+})
+
+navigator.addEventListener("click", (e) => {
+  if (e.target.matches("button")) {
+    const dot = e.target
+    const dotIndex = Number(dot.dataset.index)
+    console.log(dot.dataset)
+    // currentIndex = dot.dataset.index
+
+    moveSlide(currentIndex)
+  }
+})
+
+// 監聽螢幕寬度變動
+window.addEventListener("resize", () => {
+  setupSlides() // 1. 重新計算每張 slide 的 left 位置
+  moveSlide(currentIndex) // 2. 依照新的寬度，重新計算 track 的 translateX 位移量
+})
 ```
 
 返回[JavaScript 技術筆記](#javascript-技術筆記)

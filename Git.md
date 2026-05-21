@@ -14,6 +14,14 @@
     - [git blame](#git-blame)
     - [git log](#git-log)
     - [用 git config 設定指令別名(縮寫)](#用-git-config-設定指令別名縮寫)
+  - [git branch](#git-branch)
+  - [git push](#git-push)
+  - [.gitignore](#gitignore)
+  - [git reset](#git-reset)
+  - [git reflog](#git-reflog)
+  - [git merge](#git-merge)
+    - [vim 編輯器](#vim-編輯器)
+  - [git rebase](#git-rebase)
 
 ## git config
 
@@ -138,5 +146,37 @@
 
 - ：$`git config --global alias.別名al "原指令log --oneline --author"`
   - 縮寫變：$`git al`
+
+返回[Git 技術筆記](#git-技術筆記)
+
+## git branch
+
+返回[Git 技術筆記](#git-技術筆記)
+
+## git push
+
+返回[Git 技術筆記](#git-技術筆記)
+
+## .gitignore
+
+返回[Git 技術筆記](#git-技術筆記)
+
+## git reset
+
+返回[Git 技術筆記](#git-技術筆記)
+
+## git reflog
+
+返回[Git 技術筆記](#git-技術筆記)
+
+## git merge
+
+返回[Git 技術筆記](#git-技術筆記)
+
+### vim 編輯器
+
+返回[Git 技術筆記](#git-技術筆記)
+
+## git rebase
 
 返回[Git 技術筆記](#git-技術筆記)
