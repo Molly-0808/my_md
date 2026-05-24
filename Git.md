@@ -1,6 +1,7 @@
 # Git 技術筆記
 
 - [Git 技術筆記](#git-技術筆記)
+  - [練習題網址和檔案](#練習題網址和檔案)
   - [git config](#git-config)
     - [基本設定](#基本設定)
     - [用 git config 設定指令的縮寫](#用-git-config-設定指令的縮寫)
@@ -19,34 +20,48 @@
     - [git blame](#git-blame)
     - [git log](#git-log)
     - [git branch](#git-branch)
+    - [git reflog](#git-reflog)
   - [git branch](#git-branch-1)
-    - [git switch](#git-switch)
-    - [git checkout](#git-checkout)
-  - [git push / git pull](#git-push--git-pull)
-    - [在本地加入遠端 GitHub 專案](#在本地加入遠端-github-專案)
-    - [正式 git push](#正式-git-push)
+  - [git switch](#git-switch)
+  - [git checkout](#git-checkout)
+  - [detached HEAD 斷頭狀態](#detached-head-斷頭狀態)
+  - [git push](#git-push)
+    - [推送的前置作業](#推送的前置作業)
+    - [正式推送](#正式推送)
   - [.gitignore](#gitignore)
+    - [那 API KEY 放哪?](#那-api-key-放哪)
   - [git reset](#git-reset)
-  - [git reflog](#git-reflog)
   - [git merge](#git-merge)
+    - [如何 git merge](#如何-git-merge)
+    - [如何取消 git merge](#如何取消-git-merge)
     - [vim 編輯器](#vim-編輯器)
   - [git rebase](#git-rebase)
+  - [git clone](#git-clone)
+  - [git fetch](#git-fetch)
+  - [git pull](#git-pull)
+  - [GitHub 多人協作](#github-多人協作)
+    - [開 issues](#開-issues)
+    - [PR (Pull requests)](#pr-pull-requests)
+    - [解衝突](#解衝突)
+  - [git stash](#git-stash)
+  - [git cherry-pick](#git-cherry-pick)
+
+## 練習題網址和檔案
+
+題庫：https://hackmd.io/IbWp68diQGiy8x-9yBmPlw?view#Git-reset-amp-reflog-%E7%B7%B4%E7%BF%92
+
+檔案：https://drive.google.com/drive/u/0/folders/1P5agqEJUM2Lac6sC2k4e6Q7dafb8uJUG
 
 ## git config
 
 ### 基本設定
 
-- 1\. 開啟 VS Code 內建終端機：按 Ctrl ` (Tab 上面那個鍵)
+1. 開啟 VS Code 內建終端機：按 Ctrl ` (Tab 上面那)
+2. 檢查git設定值：$`git config --lis`
+3. 設定user.name：$`git config --global user.name "我的名`
+4. 設定user.email：$`git config --global user.email "我的信箱"`
 
-- 2\. 檢查git設定值：$`git config --list `
-
-- 3\. 設定user.name：$`git config --global user.name "我的名字"`
-
-- 4\. 設定user.email：$`git config --global user.email "我的信箱"`
-
-> 因為有傳遞 --global參數，只需操作一次
-
-> $代表要在 PowerShell 裡面執行，不必把錢字號也寫上去
+>     有傳遞 --global參數，只需操作一次
 
 ### 用 git config 設定指令的縮寫
 
@@ -63,15 +78,11 @@
 
 ### 如何建立 .git 資料夾
 
-- 1\. 在電腦建立新資料夾
-
-- 2\. 直接開啟 VS Code 新視窗，拖拉新資料夾進入 VS Code
-
-- 3\. 開啟 VS Code 內建終端機：按 Ctrl ` (Tab 上面那個鍵)
-
-- 4\. 生成 .git 資料夾：$`git init`
-
-- 5\. 確認版本號：$`git --version `
+1. 在電腦建立新夾
+2. 直接開啟 VS Code 新視窗，拖拉新資料夾進入 VS Ce
+3. 開啟 VS Code 內建終端機：按 Ctrl ` (Tab 上面那)
+4. 生成 .git 資料夾：$`git in`
+5. 確認版本號：$`git --version `
 
 ### 如何取消 git init
 
@@ -93,15 +104,16 @@
 
 - 加入某個資料夾內的某個檔案：$`git add 資料夾名稱/aaa.md`
 
-- 加入目前所有資料夾內全部新增或修改過的檔案：$`git add .`(點點前要有空格)
+- 加入目前所有資料夾內全部有新增或修改過的檔案：$`git add .`(點點前要有空格)
 
 - 一次性加入特定多個檔案：$`git add aaa.md bbb.md ccc.md`(檔案中間空格即可)
 
-> git add 不會加入資料夾，只會加入「檔案」。若命令輸入資料夾，代表加入該資料夾內的所有檔案。
+>     git add 不會加入資料夾，只會加入「檔案」，所以如果命令輸入資料夾，代表加入該資料夾內的所有檔案
 
 ### 如何取消 git add
 
-- 移除某個檔案：$`git restore --staged aaa.md`
+- 從暫存區移除某個檔案：$`git restore --staged aaa.md`
+  - 舊式/傳統指令，效果同上：$`git reset aaa.md`
 
 - 清空暫存區：$`git restore --staged .`
 
@@ -112,8 +124,7 @@
 ### 如何 commit
 
 - 儲存檔案：$`git commit -m "第一次commit"`
-
-> git add 後 commit 的東西就是剛才 add 過的檔案
+  - git add 後 commit 的東西就是剛才 add 過的檔案
 
 - 修改最新commit的備註訊息(SHA值會變)：$`git commit --amend -m "有錯字可改"`
 
@@ -121,7 +132,7 @@
 
 ### 如何取消 commit
 
-> 如果已經commit過，需要修改檔案，只要重新add再commit就好
+如果已經commit過，需要修改檔案，只要重新add再commit就好
 
 返回[Git 技術筆記](#git-技術筆記)
 
@@ -153,8 +164,7 @@
 - 查看完整修改內容：$`git log -p`
 
 - 查看特定人的commit：$`git log --oneline --author="想查的名字"`
-
-> =和後面的”人名”之間不能有空格，且人名呈現灰色是正常的
+  - =和後面的”人名”之間不能有空格，且人名呈現灰色是正常的
 
 - 查看特定字的commit：$`git log --oneline --grep="想查的字"`
 
@@ -165,6 +175,20 @@
 - 查看目前 (本機) 有哪些 branches：$`git branch`
 
 - 查看所有 branch 包含遠端(all)：$`git branch -a`
+
+返回[Git 技術筆記](#git-技術筆記)
+
+### git reflog
+
+git reflog 記錄「滑鼠與鍵盤操作 Git 的歷史」，通常會保留 30 到 90 天。
+
+- 每一次 HEAD 移動：$`git reflog`
+
+- 看某個分支的移動紀錄：$`git reflog 分支名`
+
+- 顯示最近 5 筆：$`git reflog -n 5`
+
+- 在什麼時間點，讓 HEAD 做了什麼變動：$`git reflog --date=local`
 
 返回[Git 技術筆記](#git-技術筆記)
 
@@ -182,7 +206,7 @@
 
 - 在指定的 commit（SHA）位置建立一個新的分支：$`git branch 分支名 SHA值`
 
-### git switch
+## git switch
 
 - 將 HEAD(我的編輯位置) 移到指定的分支：$`git switch 指定分支名`
 
@@ -192,7 +216,7 @@
 
 - 切換位置到指定 commit（進入斷頭 detached HEAD）：$`git switch --detach SHA值`
 
-### git checkout
+## git checkout
 
 - 將 HEAD(我的編輯位置) 移到指定的分支：$`git checkout 指定分支名`
 
@@ -206,21 +230,44 @@
 
 返回[Git 技術筆記](#git-技術筆記)
 
-## git push / git pull
+## detached HEAD 斷頭狀態
 
-### 在本地加入遠端 GitHub 專案
+>     情況：我不小心checkout到某個SHA值上並且變動檔案，已經add和commit，等於我在不屬於我的branch上commit了(就是我根本沒有在任何branch上commit)。
+
+如果我想保留剛剛的修改，並安全回到 main，解決辦法：
+
+強制將 main 分支的標籤移動到新做好的 SHA 值上：$`git branch -f main 新SHA值`
+
+這時 main 已經移過來了，但我還在斷頭狀態，需切回 main 分支 ：$`git checkout main`
+
+返回[Git 技術筆記](#git-技術筆記)
+
+## git push
+
+### 推送的前置作業
+
+如何開新的 GitHub 儲存庫：
+
+![GitHub](./image/GitHub1.png)
+
+![GitHub](./image/GitHub2.png)
+
+![GitHub](./image/GitHub3.png)
 
 - 在本地加入遠端 GitHub 專案並取暱稱：$`git remote add 儲存庫名 儲存庫網址`
+  - 網址在GitHub那邊
 
-> 儲存庫名預設是 origin ，可自己改別的暱稱。
+  - 儲存庫名預設是 origin ，可自己改別的暱稱。
 
-- 首次推送本地分支 main 到遠端儲存庫 origin，並設定上游分支的對應：$`git push -u 儲存庫名origin 本地分支main`
+1. 單次把 master 變成 main：$`git branch -M main`
 
-> 設定上游分支的對應是指 -u，即 --set-upstream 的縮寫。
+2. 首次推送本地分支 main 到遠端儲存庫 origin，並設定上游分支的對應：$`git push -u 儲存庫名origin 本地分支main`
+
+>     設定上游分支的對應是指 -u，即 --set-upstream 的縮寫。
 
 - 儲存庫重新命名：$`git remote rename 舊名 新名`
 
-### 正式 git push
+### 正式推送
 
 - 推送預設分支到預設的遠端儲存庫：$`git push`
 
@@ -229,35 +276,123 @@
 - 強制推送：$`git push 儲存庫名origin 分支名main -f`
 
 - 本地的某分支推到遠端的某分支 (名字相同時可省略)：$`git push 儲存庫名origin 本地分支名:遠端分支名`
-
-> 此動作容易將本地分支和遠端分支取不同名字導致不便。
+  - 例如：git push origin feature:feature 可簡寫為 git push origin feature
 
 - 刪除遠端分支：$`git push 儲存庫名origin :遠端分支名`
-
-> 冒號前面要留空格，因為冒號前面原本是本地分支的位置，但現在空著，等於是用「空無一物」覆蓋遠端分支，結果就是把該遠端分支刪除了。
+  - 冒號前面要留空格，因為冒號前面原本是本地分支的位置，但現在空著，等於是用「空無一物」覆蓋遠端分支，結果就是把該遠端分支刪除了。
 
 返回[Git 技術筆記](#git-技術筆記)
 
 ## .gitignore
 
+指定哪些檔案不要被 Git 版控，例如：金鑰（API KEY、密碼）、設定檔（.env）、編譯產物（node_modules、dist）、系統檔（.DS_Store）
+
+![](./image/gitignore.png)
+
+- 把已經 commit 過但後來發現不需要追蹤的檔案從 Git 庫中剔除，並且不刪除檔案：$`git rm --cached 檔名`
+
+### 那 API KEY 放哪?
+
+- .env（環境變數檔）：只存在於本機電腦，在檔案裡寫真的 API KEY、資料庫密碼。
+
+- .env.example（範本檔）：只寫欄位名稱（例如 API_KEY= 留空），不寫真實密碼，給新加入專案的人看到底有多少密碼種類，再去跟建立專案的人要密碼。
+
 返回[Git 技術筆記](#git-技術筆記)
 
 ## git reset
 
-返回[Git 技術筆記](#git-技術筆記)
+讓分支 Git 回到過去某一刻，順便決定要不要保留修改。
 
-## git reflog
+至少要有兩次commit才可以做到「回到上一個commit」。
+
+- 回到過去的某個 commit（預設--mixed）：$`git reset SHA值`
+  - 所有異動的檔案變回 unstaged（add 前）：$`git reset --mixed SHA值`
+
+  - 所有異動的檔案變回 staged（add 後）：$`git reset --soft SHA值`
+  - 所有異動的檔案全部還原（謹慎使用）：$`git reset --hard SHA值`
+
+>     mixed和soft不會刪掉檔案和修改，但是hard會刪掉。
+
+- 從暫存區移除某個檔案(舊式/傳統指令)：$`git reset aaa.md`
+  - 新式，效果同上：$`git restore --staged aaa.md`
+
+- 回到上一個 commit （^ 代表往上一層）：$`git reset HEAD^`
+
+- 回到前 3 個 commit（~n 代表往前 n 步）：$`git reset HEAD~3`
+
+- 回到某 commit 的上一步：$`git reset SHA值^`
+
+- 回到某 commit 的前幾步：$`git reset SHA值~3`
+
+返回[git-reflog](#git-reflog)
 
 返回[Git 技術筆記](#git-技術筆記)
 
 ## git merge
 
+將另一個分支的變更合併進「我目前所在的分支」。
+
+1. 快進式合併 (Fast-Forward)：不增加新的 Commit，直接把進度指標往前推進到目標分支的最新位置，不會生成新的節點。
+
+2. 三方合併 (3-way Merge)：兩邊都有新進度，Git 找出共同祖先並融合雙方修改，自動生成一個新的合併節點。
+
+### 如何 git merge
+
+- 將momo分支合併到目前分支：$`git merge momo`
+
+- 優先使用快進：$`git merge -ff 分支名`
+  - -ff 代表 Fast-Forward（快進）
+
+- 強迫 Git 建立一個新的節點：$`git merge --no-ff 分支名`
+
+- 強迫 Git 建立一個新的節點，並指定訊息（不會進到 vim 編輯器）：$`git merge --no-ff -m "commit訊息" 分支名`
+
+### 如何取消 git merge
+
+- 取消 merge（發生衝突時）：$`git merge --abort`
+
 返回[Git 技術筆記](#git-技術筆記)
 
 ### vim 編輯器
 
+vim 是跑在終端機裡的文字編輯器。
+
+當遇到會產生新節點的Y字型情況，執行完 $`git merge 分支名` 之後，會跳出問我要不要改備註訊息的vim編輯器，如果我想改就先打小寫 i 進入編輯模式，改好之後按esc退出編輯，再打 :wq 就能做到儲存並離開。
+
+![vim 編輯器](./image/vim.png)
+
 返回[Git 技術筆記](#git-技術筆記)
 
 ## git rebase
+
+返回[Git 技術筆記](#git-技術筆記)
+
+## git clone
+
+返回[Git 技術筆記](#git-技術筆記)
+
+## git fetch
+
+返回[Git 技術筆記](#git-技術筆記)
+
+## git pull
+
+返回[Git 技術筆記](#git-技術筆記)
+
+## GitHub 多人協作
+
+### 開 issues
+
+### PR (Pull requests)
+
+### 解衝突
+
+返回[Git 技術筆記](#git-技術筆記)
+
+## git stash
+
+返回[Git 技術筆記](#git-技術筆記)
+
+## git cherry-pick
 
 返回[Git 技術筆記](#git-技術筆記)
