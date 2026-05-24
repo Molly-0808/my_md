@@ -22,9 +22,9 @@
     - [git branch](#git-branch)
     - [git reflog](#git-reflog)
   - [git branch](#git-branch-1)
-  - [git switch](#git-switch)
-  - [git checkout](#git-checkout)
-  - [detached HEAD 斷頭狀態](#detached-head-斷頭狀態)
+    - [git switch](#git-switch)
+    - [git checkout](#git-checkout)
+    - [detached HEAD 斷頭狀態](#detached-head-斷頭狀態)
   - [git push](#git-push)
     - [推送的前置作業](#推送的前置作業)
     - [正式推送](#正式推送)
@@ -36,6 +36,8 @@
     - [如何取消 git merge](#如何取消-git-merge)
     - [vim 編輯器](#vim-編輯器)
   - [git rebase](#git-rebase)
+    - [如何 git rebase](#如何-git-rebase)
+    - [如何取消 git rebase](#如何取消-git-rebase)
   - [git clone](#git-clone)
   - [git fetch](#git-fetch)
   - [git pull](#git-pull)
@@ -200,13 +202,13 @@ git reflog 記錄「滑鼠與鍵盤操作 Git 的歷史」，通常會保留 30 
 
 - 強制刪除名為 momo 的分支：$`git branch -D momo`
 
-- 重命名目前的分支：$`git branch -m 新分支名`
+- 重新命名分支：$`git branch -m 新分支名`
 
-- 強制重命名目前的分支：$`git branch -M 新分支名`
+- 強制重新命名分支：$`git branch -M 新分支名`
 
 - 在指定的 commit（SHA）位置建立一個新的分支：$`git branch 分支名 SHA值`
 
-## git switch
+### git switch
 
 - 將 HEAD(我的編輯位置) 移到指定的分支：$`git switch 指定分支名`
 
@@ -216,7 +218,7 @@ git reflog 記錄「滑鼠與鍵盤操作 Git 的歷史」，通常會保留 30 
 
 - 切換位置到指定 commit（進入斷頭 detached HEAD）：$`git switch --detach SHA值`
 
-## git checkout
+### git checkout
 
 - 將 HEAD(我的編輯位置) 移到指定的分支：$`git checkout 指定分支名`
 
@@ -230,7 +232,7 @@ git reflog 記錄「滑鼠與鍵盤操作 Git 的歷史」，通常會保留 30 
 
 返回[Git 技術筆記](#git-技術筆記)
 
-## detached HEAD 斷頭狀態
+### detached HEAD 斷頭狀態
 
 >     情況：我不小心checkout到某個SHA值上並且變動檔案，已經add和commit，等於我在不屬於我的branch上commit了(就是我根本沒有在任何branch上commit)。
 
@@ -333,12 +335,16 @@ git reflog 記錄「滑鼠與鍵盤操作 Git 的歷史」，通常會保留 30 
 將另一個分支的變更合併進「我目前所在的分支」。
 
 1. 快進式合併 (Fast-Forward)：不增加新的 Commit，直接把進度指標往前推進到目標分支的最新位置，不會生成新的節點。
+   - 情況：momo分支有新的 commit ，main分支沒有。
 
 2. 三方合併 (3-way Merge)：兩邊都有新進度，Git 找出共同祖先並融合雙方修改，自動生成一個新的合併節點。
+   - 情況：momo分支和main分支都有新的 commit 。
 
 ### 如何 git merge
 
-- 將momo分支合併到目前分支：$`git merge momo`
+- 將momo分支合併到目前所在的分支：$`git merge momo`
+
+>     git merge momo 的效果是 HEAD 會在目前所在分支上，並且會排在最上面。
 
 - 優先使用快進：$`git merge -ff 分支名`
   - -ff 代表 Fast-Forward（快進）
@@ -365,9 +371,51 @@ vim 是跑在終端機裡的文字編輯器。
 
 ## git rebase
 
+複製目前的進度，剪貼到目標分支的最新 Commit 後面，讓歷史紀錄變成一條乾淨的直線。
+
+舉例：
+
+```
+         ┌── C1 ── C2 (你的 dev 分支)
+         │
+(main) ─── A ─── B (目標 main 分支)
+```
+
+在 dev 分支執行 git rebase main 之後......
+
+```
+(main) ─── A ─── B ─── C1' ─── C2'
+```
+
+### 如何 git rebase
+
+- 將目前分支嫁接到momo分支之後：$`git rebase momo`
+
+- 解決衝突後，繼續解下一個 commit 的衝突：$`git rebase --continue`
+
+>     絕對不要對「已經推送到遠端（GitHub）」的 Commit 執行 Rebase，因為 Rebase 是「複製並刪除舊節點」，會改變 Commit 的 SHA 值。
+
+### 如何取消 git rebase
+
+- 取消 rebase：$`git rebase --abort`
+
+- 跳過解當前 commit 的衝突：$`git rebase --skip`
+
 返回[Git 技術筆記](#git-技術筆記)
 
 ## git clone
+
+把遠端 repository 複製一份到本地（把 GitHub 專案整包抓到本地來用）。
+
+會做的事情：
+
+- 下載整個專案
+- 自動建立 .git
+- 自動設定遠端 origin
+
+指令：$`git clone <repo-url>`
+
+![repo-url在哪裡](./image/clone.png)
 
 返回[Git 技術筆記](#git-技術筆記)
 
