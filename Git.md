@@ -21,6 +21,7 @@
     - [git log](#git-log)
     - [git branch](#git-branch)
     - [git reflog](#git-reflog)
+    - [git remote](#git-remote)
   - [git branch](#git-branch-1)
     - [git switch](#git-switch)
     - [git checkout](#git-checkout)
@@ -192,6 +193,12 @@ git reflog 記錄「滑鼠與鍵盤操作 Git 的歷史」，通常會保留 30 
 
 - 在什麼時間點，讓 HEAD 做了什麼變動：$`git reflog --date=local`
 
+### git remote
+
+- 列出所有遠端倉庫的簡稱：$`git remote`
+
+- 顯示遠端倉庫的簡稱及其對應的詳細 URL：$`git remote -v`
+
 返回[Git 技術筆記](#git-技術筆記)
 
 ## git branch
@@ -256,10 +263,10 @@ git reflog 記錄「滑鼠與鍵盤操作 Git 的歷史」，通常會保留 30 
 
 ![GitHub](./image/GitHub3.png)
 
-- 在本地加入遠端 GitHub 專案並取暱稱：$`git remote add 儲存庫名 儲存庫網址`
+- 在本地加入遠端 GitHub 儲存庫並取名字：$`git remote add 儲存庫名 儲存庫網址`
   - 網址在GitHub那邊
 
-  - 儲存庫名預設是 origin ，可自己改別的暱稱。
+  - 儲存庫名預設是 origin ，可自己改別的名字。
 
 1. 單次把 master 變成 main：$`git branch -M main`
 
@@ -407,7 +414,7 @@ vim 是跑在終端機裡的文字編輯器。
 
 把遠端 repository 複製一份到本地（把 GitHub 專案整包抓到本地來用）。
 
-會做的事情：
+git clone 會做的事情：
 
 - 下載整個專案
 - 自動建立 .git
@@ -415,11 +422,29 @@ vim 是跑在終端機裡的文字編輯器。
 
 指令：$`git clone <repo-url>`
 
+1. 開電腦終端機
+2. 然後cd到資料夾或桌面
+3. 再輸入 git clone <repo-url> (網址在GitHub)
+4. 開 VS Code 把資料夾抓進去就成功啦
+
 ![repo-url在哪裡](./image/clone.png)
 
 返回[Git 技術筆記](#git-技術筆記)
 
 ## git fetch
+
+抓取遠端最新資料，但不會影響目前檔案。
+
+HEAD 不會移動，目前工作中的分支也不會改變。
+
+git fetch 會做的事情：
+
+- 更新遠端分支
+- 不會改你的程式碼
+
+從遠端儲存庫下載某分支到本地電腦：$`git fetch 儲存庫名 分支名`
+
+> 記得把 Show Remote Brench 打勾才看得到遠端分支。
 
 返回[Git 技術筆記](#git-技術筆記)
 
