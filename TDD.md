@@ -90,28 +90,58 @@ export { f2c, c2f };
 ```js
 在 __tests__ 的 atm.test.js 裡：
 
-存錢功能
-可以存錢
-不可以存 0 元或是小於 0 元的金額（越存錢越少！）
-領錢功能
-可以領錢
-不能領 0 元或是小於 0 元的金額（越領錢越多！）
-不能領超過本身餘額
-// 以上是題目
-
 // 存錢功能
 import { BankAccount } from "../lib/BankAccount.js";
 
-  // 3A原則
-test("可以存錢", () => {
-  // Arrange
-  const account = new BankAccount(5);
+describe("存錢功能", () => {
+  test("可以存錢", () => {
+    // 3A原則
+    // Arrange
+    const account = new BankAccount(5);
 
-  // Act
-  account.deposit(10);
+    // Act
+    account.deposit(10);
 
-  // Assert
-  expect(account.balance()).toBe(15);
+    // Assert
+    expect(account.getBalance()).toBe(15);
+  });
+
+  test("不可以存 0 元或是小於 0 元的金額", () => {
+    const account = new BankAccount(5);
+
+    account.deposit(-1);
+
+    expect(account.getBalance()).toBe(5);
+  });
+});
+
+describe("領錢功能", () => {
+  test("可以領錢", () => {
+    const account = new BankAccount(15);
+
+    const money = account.withdraw(5);
+
+    expect(money).toBe(5);
+    expect(account.getBalance()).toBe(10);
+  });
+
+  test("不能領 0 元或是小於 0 元的金額", () => {
+    const account = new BankAccount(15);
+
+    const money = account.withdraw(-5);
+
+    expect(money).toBe(0);
+    expect(account.getBalance()).toBe(15);
+  });
+
+  test("不能領超過本身餘額", () => {
+    const account = new BankAccount(25);
+
+    const money = account.withdraw(30);
+
+    expect(money).toBe(0);
+    expect(account.getBalance()).toBe(25);
+  });
 });
 ```
 
@@ -119,21 +149,36 @@ test("可以存錢", () => {
 在 lib 的 BankAccount.js 裡：
 
 class BankAccount {
+  // 3A 原則
   // Arrange
   constructor(amount) {
-    this.balance = amount;
+    this.amount = amount;
   }
 
   // Act: 存錢
-  deposit(money) {
-    if (money > 0) {
-      this.balance += money;
+  deposit(amount) {
+    if (amount > 0) {
+      this.amount += amount;
     }
+  }
+
+  // 領錢
+  withdraw(amount) {
+    if (amount > 0 && amount <= this.amount) {
+      this.amount -= amount;
+      return amount;
+    }
+    return 0;
   }
 
   // Assert: 查詢餘額
   getBalance() {
-    return this.balance;
+    return this.amount;
+  }
+
+  // 檢查餘額是否足夠支付特定金額
+  isEnough(amount) {
+    return this.getBalance() >= amount;
   }
 }
 

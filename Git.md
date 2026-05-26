@@ -36,12 +36,16 @@
     - [如何 git merge](#如何-git-merge)
     - [如何取消 git merge](#如何取消-git-merge)
     - [vim 編輯器](#vim-編輯器)
+    - [merge 解決衝突](#merge-解決衝突)
   - [git rebase](#git-rebase)
     - [如何 git rebase](#如何-git-rebase)
     - [如何取消 git rebase](#如何取消-git-rebase)
+    - [rebase 解決衝突](#rebase-解決衝突)
   - [git clone](#git-clone)
   - [git fetch](#git-fetch)
   - [git pull](#git-pull)
+    - [git pull 儲存庫名 分支名](#git-pull-儲存庫名-分支名)
+    - [git pull 儲存庫名 分支名 --rebase](#git-pull-儲存庫名-分支名---rebase)
   - [GitHub 多人協作](#github-多人協作)
     - [開 issues](#開-issues)
     - [PR (Pull requests)](#pr-pull-requests)
@@ -81,8 +85,8 @@
 
 ### 如何建立 .git 資料夾
 
-1. 在電腦建立新夾
-2. 直接開啟 VS Code 新視窗，拖拉新資料夾進入 VS Ce
+1. 建立資料夾並cd過去：$`mkdir 資料夾名字; cd 資料夾名字`
+2. 開啟 VS Code：$`code .`
 3. 開啟 VS Code 內建終端機：按 Ctrl ` (Tab 上面那)
 4. 生成 .git 資料夾：$`git in`
 5. 確認版本號：$`git --version `
@@ -214,6 +218,8 @@ git reflog 記錄「滑鼠與鍵盤操作 Git 的歷史」，通常會保留 30 
 - 強制重新命名分支：$`git branch -M 新分支名`
 
 - 在指定的 commit（SHA）位置建立一個新的分支：$`git branch 分支名 SHA值`
+
+- 以 dev 分支為基礎，建立一個 momo 本地分支：$`git branch momo dev`
 
 ### git switch
 
@@ -364,8 +370,6 @@ git reflog 記錄「滑鼠與鍵盤操作 Git 的歷史」，通常會保留 30 
 
 - 取消 merge（發生衝突時）：$`git merge --abort`
 
-返回[Git 技術筆記](#git-技術筆記)
-
 ### vim 編輯器
 
 vim 是跑在終端機裡的文字編輯器。
@@ -373,6 +377,34 @@ vim 是跑在終端機裡的文字編輯器。
 當遇到會產生新節點的Y字型情況，執行完 $`git merge 分支名` 之後，會跳出問我要不要改備註訊息的vim編輯器，如果我想改就先打小寫 i 進入編輯模式，改好之後按esc退出編輯，再打 :wq 就能做到儲存並離開。
 
 ![vim 編輯器](./image/vim.png)
+
+### merge 解決衝突
+
+```
+>>>分別在 krystal 和 dev 做 commit：
+
+git checkout krystal
+在aaa.html新增一個p
+git add .
+git commit -m "kp"
+git checkout dev
+在aaa.html新增一個div
+git add .
+git commit –m “devdiv”
+
+>>>在 dev 把 krystal 合併進來 dev(dev會在最上面)：
+git merge krystal
+
+>>>解衝突：
+因為兩個分支都在同個檔案做更動
+所以產生了衝突
+可以擇一保留或兩者都要或都不要
+選完記得 ctrl+s 存檔
+(存檔前也可以自己打字更動內容)
+然後記得 add、commit
+git add .
+git commit -m "解決衝突"
+```
 
 返回[Git 技術筆記](#git-技術筆記)
 
@@ -408,6 +440,28 @@ vim 是跑在終端機裡的文字編輯器。
 
 - 跳過解當前 commit 的衝突：$`git rebase --skip`
 
+### rebase 解決衝突
+
+```
+先建立 andy 分支
+分別在 dev 和 andy 做 commit
+因為兩個分支都在同個檔案做更動
+所以產生了衝突
+在 andy 把 andy 嫁接到 dev 之後(andy會在最上面)
+
+rebase 解決衝突的方式和merge不太一樣
+因為 rebase 的嫁接方式是把 andy 的 commit 一顆顆丟過去 dev 比對衝突
+解決衝突的過程一樣是擇一保留或兩者都要或都不要
+選完記得ctrl+s存檔
+存檔前也可以自己打字更動內容
+一樣要記得add
+
+>>>這邊開始不一樣：
+不用輸入 git commit -m “解決衝突“ 的指令
+而是輸入 git rebase --continue
+然後就可以繼續檢查下一個 commit 的衝突
+```
+
 返回[Git 技術筆記](#git-技術筆記)
 
 ## git clone
@@ -423,9 +477,10 @@ git clone 會做的事情：
 指令：$`git clone <repo-url>`
 
 1. 開電腦終端機
-2. 然後cd到資料夾或桌面
-3. 再輸入 git clone <repo-url> (網址在GitHub)
-4. 開 VS Code 把資料夾抓進去就成功啦
+2. 建立資料夾並cd過去：$`mkdir 資料夾名字; cd 資料夾名字`
+3. 資料夾或桌面
+4. 再輸入 git clone <repo-url> (網址在GitHub)
+5. 開 VS Code 把資料夾抓進去就成功啦
 
 ![repo-url在哪裡](./image/clone.png)
 
@@ -433,22 +488,39 @@ git clone 會做的事情：
 
 ## git fetch
 
-抓取遠端最新資料，但不會影響目前檔案。
-
-HEAD 不會移動，目前工作中的分支也不會改變。
-
-git fetch 會做的事情：
-
-- 更新遠端分支
-- 不會改你的程式碼
+>     1. 工作目錄不會改變
+>     2. HEAD 不會動
+>     3. 不會有衝突，因為只「下載」，還未「合併（Merge）」
 
 從遠端儲存庫下載某分支到本地電腦：$`git fetch 儲存庫名 分支名`
+
+舉例：git fetch origin dev：將 origin 遠端儲存庫的 dev 分支上所有本地電腦還沒有的 Commit、檔案和歷史紀錄，全下載到電腦的 .git 資料夾，同時 origin/dev 會移到最上面。
 
 > 記得把 Show Remote Brench 打勾才看得到遠端分支。
 
 返回[Git 技術筆記](#git-技術筆記)
 
 ## git pull
+
+### git pull 儲存庫名 分支名
+
+>     1. 等同於 git fetch + git merge
+>     2. HEAD 會移動
+>     3. 有分叉時會產生 merge commit
+
+從遠端儲存庫下載某分支到本地電腦，並將它 merge 到當前所在的本地分支中：$`git pull 儲存庫名 分支名`
+
+![git pull 儲存庫名 分支名](./image/gitpulloriginmain.png)
+
+### git pull 儲存庫名 分支名 --rebase
+
+>     1. 等同於 git fetch + git rebase
+>     2. HEAD 會移動
+>     3. 有分叉時自動 rebase，不產生 merge commit
+
+從遠端儲存庫下載某分支到本地電腦，並將當前所在的本地分支 rebase 嫁接到新下載到本地的分支後：$`git pull 儲存庫名 分支名 --rebase`
+
+![git pull 儲存庫名 分支名](./image/gitpulloriginmain--rebase.png)
 
 返回[Git 技術筆記](#git-技術筆記)
 
