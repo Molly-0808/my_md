@@ -49,6 +49,8 @@
   - [GitHub 多人協作](#github-多人協作)
     - [開 issues](#開-issues)
     - [PR (Pull requests)](#pr-pull-requests)
+      - [發PR前要做：](#發pr前要做)
+      - [發 PR 流程：](#發-pr-流程)
     - [解衝突](#解衝突)
   - [git stash](#git-stash)
   - [git cherry-pick](#git-cherry-pick)
@@ -479,7 +481,7 @@ git clone 會做的事情：
 1. 開電腦終端機
 2. 建立資料夾並cd過去：$`mkdir 資料夾名字; cd 資料夾名字`
 3. 資料夾或桌面
-4. 再輸入 git clone <repo-url> (網址在GitHub)
+4. 再輸入 `git clone <repo-url>` (網址在GitHub)
 5. 開 VS Code 把資料夾抓進去就成功啦
 
 ![repo-url在哪裡](./image/clone.png)
@@ -528,9 +530,65 @@ git clone 會做的事情：
 
 ### 開 issues
 
+![issue怎開](./image/issue.png)
+
+- 確認沒有重複的 issue（可由一人統一開票）
+
+- 標題簡短清楚，可加點數或分類
+
+- 描述清楚問題、預期行為、實際行為，附截圖或錯誤訊息
+
+- 用 Label 標註性質，Milestone 管理階段目標
+
+- 每人一次只接一張，assign(分配) 給自己
+
+- 完成後關閉 issue（手動或 PR 加 close）
+
 ### PR (Pull requests)
 
+Pull Request 的本質是「請求」目標專案合併你「已經存在於 GitHub 上」的某個分支。
+
+#### 發PR前要做：
+
+1. 先確認HEAD位置，要在我開發或修改檔案的分支
+
+2. 把最新遠端pull下來看有沒有衝突，如果有衝突，就在編輯器裡修好，然後 commit
+
+3. 確認過再推上去： git push origin <分支名稱>
+
+4. 再去發PR請求合併
+
+#### 發 PR 流程：
+
+- 從自己分支發 PR 到目標分支
+
+- 填寫標題、描述、標記 issue
+
+- 依回饋修改，通過後 merge or rebase
+
 ### 解衝突
+
+1. checkout到本地dev
+
+2. 把遠端dev最新進度拉下來：git pull origin dev
+
+3. checkout到我開發或修改的分支，比如login
+
+4. 把login嫁接到dev後面：git rebase dev
+
+5. 解衝突 保留兩者/擇一/捨棄兩者
+
+6. Ctrl+S
+
+7. git add 檔名
+
+8. git rebase –continue
+
+9. 終端機輸入：「:wq」
+
+10. 解衝突好了之後，本地login分支會在最上面，但是遠端login還在下面，導致推不上去
+
+11. 這時就必須強推，將本地 login 推到遠端 origin ：git push origin login -f
 
 返回[Git 技術筆記](#git-技術筆記)
 
