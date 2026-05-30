@@ -22,6 +22,7 @@
     - [git branch](#git-branch)
     - [git reflog](#git-reflog)
     - [git remote](#git-remote)
+    - [git stash](#git-stash)
   - [git branch](#git-branch-1)
     - [git switch](#git-switch)
     - [git checkout](#git-checkout)
@@ -52,8 +53,11 @@
       - [發PR前要做：](#發pr前要做)
       - [發 PR 流程：](#發-pr-流程)
     - [解衝突](#解衝突)
-  - [git stash](#git-stash)
+  - [git stash](#git-stash-1)
   - [git cherry-pick](#git-cherry-pick)
+    - [如何 git cherry-pick](#如何-git-cherry-pick)
+    - [如何取消 git cherry-pick](#如何取消-git-cherry-pick)
+    - [實例](#實例)
 
 ## 練習題網址和檔案
 
@@ -185,8 +189,6 @@
 
 - 查看所有 branch 包含遠端(all)：$`git branch -a`
 
-返回[Git 技術筆記](#git-技術筆記)
-
 ### git reflog
 
 git reflog 記錄「滑鼠與鍵盤操作 Git 的歷史」，通常會保留 30 到 90 天。
@@ -204,6 +206,10 @@ git reflog 記錄「滑鼠與鍵盤操作 Git 的歷史」，通常會保留 30 
 - 列出所有遠端倉庫的簡稱：$`git remote`
 
 - 顯示遠端倉庫的簡稱及其對應的詳細 URL：$`git remote -v`
+
+### git stash
+
+- 查看所有暫存清單：$`git stash list`
 
 返回[Git 技術筆記](#git-技術筆記)
 
@@ -324,7 +330,6 @@ git reflog 記錄「滑鼠與鍵盤操作 Git 的歷史」，通常會保留 30 
 
 - 回到過去的某個 commit（預設--mixed）：$`git reset SHA值`
   - 所有異動的檔案變回 unstaged（add 前）：$`git reset --mixed SHA值`
-
   - 所有異動的檔案變回 staged（add 後）：$`git reset --soft SHA值`
   - 所有異動的檔案全部還原（謹慎使用）：$`git reset --hard SHA值`
 
@@ -479,10 +484,9 @@ git clone 會做的事情：
 指令：$`git clone <repo-url>`
 
 1. 開電腦終端機
-2. 建立資料夾並cd過去：$`mkdir 資料夾名字; cd 資料夾名字`
-3. 資料夾或桌面
-4. 再輸入 `git clone <repo-url>` (網址在GitHub)
-5. 開 VS Code 把資料夾抓進去就成功啦
+2. 先 cd 到我要放這個專案資料夾的位置
+3. 再輸入 `git clone <repo-url>` (網址在GitHub)
+4. 開 VS Code 把資料夾抓進去就成功啦
 
 ![repo-url在哪裡](./image/clone.png)
 
@@ -568,34 +572,103 @@ Pull Request 的本質是「請求」目標專案合併你「已經存在於 Git
 
 ### 解衝突
 
-1. checkout到本地dev
+1. 確認HEAD在我開發或修改的分支，例如login：$`git checkout login`
 
-2. 把遠端dev最新進度拉下來：git pull origin dev
+2. 把遠端的最新進度抓下來，存放在.git資料夾，不會影響本地的任何代碼：$`git fetch origin`
 
-3. checkout到我開發或修改的分支，比如login
+3. 把 login 分支嫁接到「放在本地的遠端dev紀錄，也就是origin/dev」 後面：$`git rebase origin/dev`
 
-4. 把login嫁接到dev後面：git rebase dev
+4. 解衝突 保留兩者/擇一/捨棄兩者
 
-5. 解衝突 保留兩者/擇一/捨棄兩者
+5. Ctrl+S
 
-6. Ctrl+S
+6. git add 檔名
 
-7. git add 檔名
+7. git rebase –continue
 
-8. git rebase –continue
+8. 終端機輸入：「:wq」
 
-9. 終端機輸入：「:wq」
+9. 解衝突好了之後，本地login分支會在最上面，但是遠端login還在下面，導致推不上去
 
-10. 解衝突好了之後，本地login分支會在最上面，但是遠端login還在下面，導致推不上去
-
-11. 這時就必須強推，將本地 login 推到遠端 origin ：git push origin login -f
+10. 這時就必須強推，將本地 login 推到遠端 origin ：$`git push origin login --force-with-lease`這邊的--force-with-lease的作用是防止我不小心覆蓋掉同事寫好的代碼。
 
 返回[Git 技術筆記](#git-技術筆記)
 
 ## git stash
 
+功能做到一半突然想要移動 HEAD 去其他分支看一下，但不想產生新commit，因為還沒做完，就可以用 git stash。
+
+>     優點：可以在不同分支解開來用！
+
+>     git stash 前是否 git add 都不影響 git stash 的效果，只是在變回原樣時，檔案會是有add或沒add而已。
+
+- 暫存修改，只含追蹤中的檔案(曾經 commit 過)：$`git stash`
+
+- 暫存修改，包含未追蹤檔案(新檔案，在過去的 Commit 歷史裡完全不存在)：$`git stash -u`
+
+- 套用最新 stash 並刪除該 stash：$`git stash pop`
+
+- 套用指定 stash 並刪除：$`git stash pop stash@{n}`
+  - stash@{0} 代表最新存進去的那筆。
+  - stash@{1} 代表倒數第二筆，以此類推，數字越大代表越舊。
+
+- 用指定 stash 建立新分支並套用：$`git stash branch 分支名 stash@{n}`
+  - Git 會做這三件事：
+    1. 回到過去：Git 會自動找出當初 git stash 的歷史時間點。
+    2. 生出新分支：在那個舊的時間點上，拉出一條全新分支。
+    3. 把 stash@{0} 的代碼放進這個新分支裡。
+
 返回[Git 技術筆記](#git-技術筆記)
 
 ## git cherry-pick
+
+從其他任何分支中，指定「某一個或某幾個 Commit」，單獨複製並黏貼到目前所在分支，只要沒有發生衝突，它就會立刻自動生出一個新的 Commit。
+
+git cherry-pick 是把一個或多個傢俱搬去別人家;git rebase 是大搬家，搬去黏在別人最新進度後面。兩者都是 SHA 值會改變，但內容一樣。
+
+![cherry-pick](./image/cherry-1.png)
+
+### 如何 git cherry-pick
+
+- 指定某一個 Commit，單獨複製並黏貼到目前所在分支：$`git cherry-pick SHA值`
+
+- 只想複製過來，不想生出新的 Commit：$`git cherry-pick -n SHA值`
+  - -n 是 --no-commit
+
+- 解衝突後：$`git cherry-pick --continue`
+
+- 跳過當前這筆 Commit，直接處理下一個：$`git cherry-pick --skip`
+
+- 用空格分開，一次把 n個 不連續的 Commit 依序複製過來：$`git cherry-pick <SHA-A> <SHA-B> <SHA-C>`
+
+- 挑選區間，把 A 到 B 之間的所有 Commit 抓過來（但不包含 A 本身，只包含 B）：$`git cherry-pick <SHA-A>..<SHA-B>`
+
+- 加上 ^ 才會包含 A 本身：$`git cherry-pick <SHA-A>^..<SHA-B>`
+
+### 如何取消 git cherry-pick
+
+- 放棄這次的挑選：$`git cherry-pick --abort`
+
+### 實例
+
+將 feature 分支上的某個 Commit 複製並合併到本地 dev 分支中
+
+1. checkout到本地dev
+
+2. git cherry-pick 2f17 ( 2f17是我想複製的那顆 commit 的 SHA，在feature分支上 )
+
+3. 解衝突 保留兩者/擇一/捨棄兩者
+
+4. Ctrl+S
+
+5. git add 檔名
+
+6. git cherry-pick –continue
+
+7. 終端機輸入：「:wq」
+
+![cherry-pick](./image/cherry-2.png)
+
+![cherry-pick](./image/cherry-3.png)
 
 返回[Git 技術筆記](#git-技術筆記)
