@@ -1,6 +1,6 @@
-# Git 技術筆記
+# Git-and-GitHub-Notes
 
-- [Git 技術筆記](#git-技術筆記)
+- [Git-and-GitHub-Notes](#git-and-github-notes)
   - [練習題網址和檔案](#練習題網址和檔案)
   - [git config](#git-config)
     - [基本設定](#基本設定)
@@ -71,7 +71,7 @@
 
 1. 開啟 VS Code 內建終端機：按 Ctrl ` (Tab 上面那)
 2. 檢查git設定值：$`git config --lis`
-3. 設定user.name：$`git config --global user.name "我的名`
+3. 設定user.name：$`git config --global user.name "我的名字"`
 4. 設定user.email：$`git config --global user.email "我的信箱"`
 
 >     有傳遞 --global參數，只需操作一次
@@ -85,7 +85,7 @@
 
 - $`git config --global init.defaultBranch main`
 
-返回[Git 技術筆記](#git-技術筆記)
+[返回目錄](#git-and-github-notes)
 
 ## git init
 
@@ -105,7 +105,7 @@
 - 手動刪除
   - 開啟 VS Code 檔案總管，直接刪除 .git 資料夾
 
-返回[Git 技術筆記](#git-技術筆記)
+[返回目錄](#git-and-github-notes)
 
 ## git add 【從工作目錄加到暫存區】
 
@@ -130,7 +130,7 @@
 
 - 清空暫存區：$`git restore --staged .`
 
-返回[Git 技術筆記](#git-技術筆記)
+[返回目錄](#git-and-github-notes)
 
 ## git commit 【從暫存區加到本地儲存庫】
 
@@ -147,7 +147,7 @@
 
 如果已經commit過，需要修改檔案，只要重新add再commit就好
 
-返回[Git 技術筆記](#git-技術筆記)
+[返回目錄](#git-and-github-notes)
 
 ## 查看紀錄相關指令
 
@@ -211,7 +211,7 @@ git reflog 記錄「滑鼠與鍵盤操作 Git 的歷史」，通常會保留 30 
 
 - 查看所有暫存清單：$`git stash list`
 
-返回[Git 技術筆記](#git-技術筆記)
+[返回目錄](#git-and-github-notes)
 
 ## git branch
 
@@ -251,7 +251,7 @@ git reflog 記錄「滑鼠與鍵盤操作 Git 的歷史」，通常會保留 30 
 
 - 僅單一檔案內容恢復成指定 commit 的版本：$`git checkout SHA值 aaa.md`
 
-返回[Git 技術筆記](#git-技術筆記)
+[返回目錄](#git-and-github-notes)
 
 ### detached HEAD 斷頭狀態
 
@@ -263,7 +263,7 @@ git reflog 記錄「滑鼠與鍵盤操作 Git 的歷史」，通常會保留 30 
 
 這時 main 已經移過來了，但我還在斷頭狀態，需切回 main 分支 ：$`git checkout main`
 
-返回[Git 技術筆記](#git-技術筆記)
+[返回目錄](#git-and-github-notes)
 
 ## git push
 
@@ -304,7 +304,7 @@ git reflog 記錄「滑鼠與鍵盤操作 Git 的歷史」，通常會保留 30 
 - 刪除遠端分支：$`git push 儲存庫名origin :遠端分支名`
   - 冒號前面要留空格，因為冒號前面原本是本地分支的位置，但現在空著，等於是用「空無一物」覆蓋遠端分支，結果就是把該遠端分支刪除了。
 
-返回[Git 技術筆記](#git-技術筆記)
+[返回目錄](#git-and-github-notes)
 
 ## .gitignore
 
@@ -320,7 +320,7 @@ git reflog 記錄「滑鼠與鍵盤操作 Git 的歷史」，通常會保留 30 
 
 - .env.example（範本檔）：只寫欄位名稱（例如 API_KEY= 留空），不寫真實密碼，給新加入專案的人看到底有多少密碼種類，再去跟建立專案的人要密碼。
 
-返回[Git 技術筆記](#git-技術筆記)
+[返回目錄](#git-and-github-notes)
 
 ## git reset
 
@@ -348,7 +348,7 @@ git reflog 記錄「滑鼠與鍵盤操作 Git 的歷史」，通常會保留 30 
 
 返回[git-reflog](#git-reflog)
 
-返回[Git 技術筆記](#git-技術筆記)
+[返回目錄](#git-and-github-notes)
 
 ## git merge
 
@@ -413,7 +413,7 @@ git add .
 git commit -m "解決衝突"
 ```
 
-返回[Git 技術筆記](#git-技術筆記)
+[返回目錄](#git-and-github-notes)
 
 ## git rebase
 
@@ -469,7 +469,7 @@ rebase 解決衝突的方式和merge不太一樣
 然後就可以繼續檢查下一個 commit 的衝突
 ```
 
-返回[Git 技術筆記](#git-技術筆記)
+[返回目錄](#git-and-github-notes)
 
 ## git clone
 
@@ -490,7 +490,7 @@ git clone 會做的事情：
 
 ![repo-url在哪裡](./image/clone.png)
 
-返回[Git 技術筆記](#git-技術筆記)
+[返回目錄](#git-and-github-notes)
 
 ## git fetch
 
@@ -504,7 +504,7 @@ git clone 會做的事情：
 
 > 記得把 Show Remote Brench 打勾才看得到遠端分支。
 
-返回[Git 技術筆記](#git-技術筆記)
+[返回目錄](#git-and-github-notes)
 
 ## git pull
 
@@ -528,7 +528,7 @@ git clone 會做的事情：
 
 ![git pull 儲存庫名 分支名](./image/gitpulloriginmain--rebase.png)
 
-返回[Git 技術筆記](#git-技術筆記)
+[返回目錄](#git-and-github-notes)
 
 ## GitHub 多人協作
 
@@ -592,7 +592,7 @@ Pull Request 的本質是「請求」目標專案合併你「已經存在於 Git
 
 10. 這時就必須強推，將本地 login 推到遠端 origin ：$`git push origin login --force-with-lease`這邊的--force-with-lease的作用是防止我不小心覆蓋掉同事寫好的代碼。
 
-返回[Git 技術筆記](#git-技術筆記)
+[返回目錄](#git-and-github-notes)
 
 ## git stash
 
@@ -618,7 +618,7 @@ Pull Request 的本質是「請求」目標專案合併你「已經存在於 Git
     2. 生出新分支：在那個舊的時間點上，拉出一條全新分支。
     3. 把 stash@{0} 的代碼放進這個新分支裡。
 
-返回[Git 技術筆記](#git-技術筆記)
+[返回目錄](#git-and-github-notes)
 
 ## git cherry-pick
 
@@ -671,4 +671,4 @@ git cherry-pick 是把一個或多個傢俱搬去別人家;git rebase 是大搬�
 
 ![cherry-pick](./image/cherry-3.png)
 
-返回[Git 技術筆記](#git-技術筆記)
+[返回目錄](#git-and-github-notes)

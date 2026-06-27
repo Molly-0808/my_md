@@ -1,6 +1,6 @@
-# JavaScript 技術筆記
+# Frontend-Learning-Notes
 
-- [JavaScript 技術筆記](#javascript-技術筆記)
+- [Frontend-Learning-Notes](#frontend-learning-notes)
   - [for 迴圈](#for-迴圈)
   - [補字 if...else if... / .padStart(總長度, "想補的字")](#補字-ifelse-if--padstart總長度-想補的字)
   - ["想印的字".repeat()](#想印的字repeat)
@@ -162,7 +162,7 @@ for (i = 1; i <= 9; i++) {
 外層迴圈 i 是被乘數; 內層迴圈 j 是乘數。
 ```
 
-返回[JavaScript 技術筆記](#javascript-技術筆記)
+[返回目錄](#frontend-learning-notes)
 
 ## 補字 if...else if... / .padStart(總長度, "想補的字")
 
@@ -198,7 +198,7 @@ console.log(result);
 再用 .padStart(3, "0") 第一個參數 3 代表目標總長度。
 ```
 
-返回[JavaScript 技術筆記](#javascript-技術筆記)
+[返回目錄](#frontend-learning-notes)
 
 ## "想印的字".repeat()
 
@@ -251,7 +251,7 @@ for (let i = 0; i < 5; i += 1) {
 *********     0 空格 + 9 星
 ```
 
-返回[JavaScript 技術筆記](#javascript-技術筆記)
+[返回目錄](#frontend-learning-notes)
 
 ## function 函式
 
@@ -448,7 +448,7 @@ true
 false
 ```
 
-返回[JavaScript 技術筆記](#javascript-技術筆記)
+[返回目錄](#frontend-learning-notes)
 
 ## Array 陣列
 
@@ -500,7 +500,7 @@ for (let i = 0; i < arr.length; i++) {
 
 ![把陣列組合起來](./image/concat.png)
 
-返回[JavaScript 技術筆記](#javascript-技術筆記)
+[返回目錄](#frontend-learning-notes)
 
 ## forEach / filter / map / reduce / every / some 陣列高階函式
 
@@ -683,7 +683,7 @@ console.log(h1, h2);
 結果 A B
 ```
 
-返回[JavaScript 技術筆記](#javascript-技術筆記)
+[返回目錄](#frontend-learning-notes)
 
 ## 物件
 
@@ -1018,7 +1018,7 @@ link.addEventListener("click", function (e) {
 });
 ```
 
-返回[JavaScript 技術筆記](#javascript-技術筆記)
+[返回目錄](#frontend-learning-notes)
 
 ## ES6
 
@@ -1167,7 +1167,7 @@ aa.addEventListener("click", h);
 bb.addEventListener("click", h);
 ```
 
-返回[JavaScript 技術筆記](#javascript-技術筆記)
+[返回目錄](#frontend-learning-notes)
 
 ## setTimeout() / setInterval()
 
@@ -1216,7 +1216,7 @@ console.log(3);
 結果 1 → 3 → (過一秒) → 2
 ```
 
-返回[JavaScript 技術筆記](#javascript-技術筆記)
+[返回目錄](#frontend-learning-notes)
 
 ## 抓取網路資料
 
@@ -1461,7 +1461,7 @@ console.log(content);
 
 ![stack](./image/call_stack.png)
 
-返回[JavaScript 技術筆記](#javascript-技術筆記)
+[返回目錄](#frontend-learning-notes)
 
 ## jQuery
 
@@ -1523,7 +1523,7 @@ $.ajax({ url }).done((posts) => {
 });
 ```
 
-返回[JavaScript 技術筆記](#javascript-技術筆記)
+[返回目錄](#frontend-learning-notes)
 
 ## YouBike練習題
 
@@ -1717,7 +1717,7 @@ try {
 }
 ```
 
-返回[JavaScript 技術筆記](#javascript-技術筆記)
+[返回目錄](#frontend-learning-notes)
 
 ## module / export & import
 
@@ -1769,7 +1769,7 @@ console.log(hh); 就不會重複兩個hi了
 import cc from "./lib.js";
 ```
 
-返回[JavaScript 技術筆記](#javascript-技術筆記)
+[返回目錄](#frontend-learning-notes)
 
 ## npm / package.json
 
@@ -1806,7 +1806,7 @@ import cc from "./lib.js";
 npm run dev
 ![npm run dev](./image/11.jpg)
 
-返回[JavaScript 技術筆記](#javascript-技術筆記)
+[返回目錄](#frontend-learning-notes)
 
 ## axios
 
@@ -1864,7 +1864,7 @@ try {
 }
 ```
 
-返回[JavaScript 技術筆記](#javascript-技術筆記)
+[返回目錄](#frontend-learning-notes)
 
 ## dayjs
 
@@ -1908,7 +1908,7 @@ function setMonthValue() {
 }
 ```
 
-返回[JavaScript 技術筆記](#javascript-技術筆記)
+[返回目錄](#frontend-learning-notes)
 
 ## Block Scope / function scope / lexical scope / closure / IIFE
 
@@ -1986,7 +1986,7 @@ for (var i = 0; i < 3; i++) {
 })(123);
 ```
 
-返回[JavaScript 技術筆記](#javascript-技術筆記)
+[返回目錄](#frontend-learning-notes)
 
 ## `__proto__` / prototype / 原型打造 / 語法糖衣
 
@@ -2134,7 +2134,7 @@ console.log(a); // 印出2
 ————————————————————————————————————————————
 ```
 
-返回[JavaScript 技術筆記](#javascript-技術筆記)
+[返回目錄](#frontend-learning-notes)
 
 ## this
 
@@ -2297,7 +2297,7 @@ var person = {
 person.sayHi();
 ```
 
-返回[JavaScript 技術筆記](#javascript-技術筆記)
+[返回目錄](#frontend-learning-notes)
 
 > 以上是JavaScript資料夾 : 0504.js
 
@@ -2432,7 +2432,7 @@ function init() {
 init();
 ```
 
-返回[JavaScript 技術筆記](#javascript-技術筆記)
+[返回目錄](#frontend-learning-notes)
 
 ## 製作 TODO APP
 
@@ -3013,7 +3013,7 @@ Alpine.data("appData", appData)
 Alpine.start()
 ```
 
-返回[JavaScript 技術筆記](#javascript-技術筆記)
+[返回目錄](#frontend-learning-notes)
 
 ## pass by reference / pass by value
 
@@ -3085,7 +3085,7 @@ sayHi();
 // Oh no an error: Hello world!
 ```
 
-返回[JavaScript 技術筆記](#javascript-技術筆記)
+[返回目錄](#frontend-learning-notes)
 
 ## 進階練習 圖片輪播
 
@@ -3307,7 +3307,7 @@ window.addEventListener("resize", () => {
 })
 ```
 
-返回[JavaScript 技術筆記](#javascript-技術筆記)
+[返回目錄](#frontend-learning-notes)
 
 ## 進階練習 倒數計時器
 
@@ -3466,4 +3466,4 @@ document.addEventListener("keyup", (e) => {
 });
 ```
 
-返回[JavaScript 技術筆記](#javascript-技術筆記)
+[返回目錄](#frontend-learning-notes)
